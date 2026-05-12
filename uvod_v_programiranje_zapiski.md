@@ -21,8 +21,7 @@
 14. [Iteratorji, generatorji in iterabilni objekti](#14-iteratorji-generatorji-in-iterabilni-objekti)
 15. [Datoteke](#15-datoteke)
 16. [Regularni izrazi](#16-regularni-izrazi)
-17. [Računska zahtevnost](#17-računska-zahtevnost)
-18. [Koristne vgrajene funkcije — hiter pregled](#18-koristne-vgrajene-funkcije--hiter-pregled)
+17. [Koristne vgrajene funkcije — hiter pregled](#18-koristne-vgrajene-funkcije--hiter-pregled)
 
 ---
 
@@ -1229,73 +1228,7 @@ r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'  # email
 
 ---
 
-## 17. Računska zahtevnost
-
-### Notacija velikega O
-
-Opisuje, kako raste čas/prostor glede na velikost vhoda `n`.
-
-| Zahtevnost | Ime | Primer |
-|-----------|-----|--------|
-| O(1) | konstantna | dostop do elementa slovarja/množice, indeksiranje |
-| O(log n) | logaritmična | bisekcija |
-| O(n) | linearna | sprehod čez seznam, iskanje v seznamu |
-| O(n log n) | kvazilinearna | urejanje (sort) |
-| O(n²) | kvadratna | dve gnezdeni zanki čez n elementov |
-| O(2ⁿ) | eksponentna | naivna Fibonacci |
-
-### Izračun zahtevnosti
-
-```python
-# O(n) — ena zanka:
-def vsota(seznam):
-    s = 0
-    for x in seznam:   # n korakov
-        s += x
-    return s
-
-# O(n²) — dve gnezdeni zanki:
-def bubble_sort(s):
-    for i in range(len(s)):          # n
-        for j in range(len(s) - 1): # n
-            if s[j] > s[j+1]:
-                s[j], s[j+1] = s[j+1], s[j]
-
-# O(log n) — bisekcija:
-# Vsak korak razpolovi interval → log₂(n) korakov.
-```
-
-### Zakaj je to važno?
-
-```python
-# Primer: iskanje elementa
-5 in [1, 2, 3, 4, 5]      # O(n) — pregleda vse
-5 in {1, 2, 3, 4, 5}      # O(1) — hash tabela!
-
-# Sled matrike — PRAVILNO O(n):
-def sled(mat):
-    return sum(mat[i][i] for i in range(len(mat)))
-
-# Sled matrike — NAPAČNO O(n²):
-def grozna_sled(mat):
-    s = 0
-    for i in range(len(mat)):
-        for j in range(len(mat)):   # nepotrebna notranja zanka!
-            if i == j:
-                s += mat[i][j]
-    return s
-```
-
-### Prostorska zahtevnost
-
-Koliko pomnilnika program porabi.
-- `O(1)` — konstantno (le nekaj spremenljivk)
-- `O(n)` — shranimo seznam dolžine n
-- `O(n²)` — shranimo matriko n×n
-
----
-
-## 18. Koristne vgrajene funkcije — hiter pregled
+## 17. Koristne vgrajene funkcije — hiter pregled
 
 ```python
 # Tipi in pretvorbe:
@@ -1345,4 +1278,4 @@ hash(x)        # hash vrednost (za nespremenljive objekte)
 ---
 
 *Zapiski sledijo učbeniku Matije Pretnarja — Uvod v programiranje (2022).*
-*Dodano: računska zahtevnost, vgrajene funkcije, iskanje z bisekcijo.*
+*Dodano: vgrajene funkcije, iskanje z bisekcijo.*
