@@ -413,6 +413,15 @@ niz[::-1]   # 'AJIZRUKER' (obrnjeno)
 '''trojni enojni (lahko čez več vrstic)'''
 """trojni dvojni (za docstringe)"""
 
+Enojni (`'`) in dvojni (`"`) narekovaji v Pythonu so funkcionalno **popolnoma enaki** — izbira je stvar osebne preference.
+
+Koristno je vedeti:
+- Če niz vsebuje apostrof, ga lažje zapišeš z dvojnimi: `"it's fine"`
+- Če niz vsebuje narekovaj, ga lažje zapišeš z enojnimi: `'rekel je "živjo"'`
+- Trojni narekovaji (`"""` ali `'''`) omogočajo večvrstične nize
+
+PEP 8 ne predpisuje enega ali drugega, samo priporoča, da si pri projektu dosleden.
+
 # Ubežni znaki:
 '\n'   # nova vrstica
 '\t'   # tabulator
