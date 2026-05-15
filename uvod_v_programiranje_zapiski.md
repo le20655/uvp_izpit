@@ -1353,6 +1353,179 @@ class AritmeticnoZaporedje:
 | `__iter__(self)` | ob zanki `for x in obj` |
 | `__next__(self)` | ob klicu `next(obj)` |
 
+### Razširjena tabela posebnih metod
+
+| Operator / uporaba | Posebna metoda |
+|---|---|
+| `obj + other` | `__add__` |
+| `obj - other` | `__sub__` |
+| `obj * other` | `__mul__` |
+| `obj / other` | `__truediv__` |
+| `obj // other` | `__floordiv__` |
+| `obj % other` | `__mod__` |
+| `obj ** other` | `__pow__` |
+| `-obj` (unarni minus) | `__neg__` |
+| `abs(obj)` | `__abs__` |
+| `obj[i]` (branje) | `__getitem__` |
+| `obj[i] = x` (pisanje) | `__setitem__` |
+| `del obj[i]` | `__delitem__` |
+| `obj(x, y)` (objekt kot funkcija!) | `__call__` |
+| `bool(obj)`, `if obj:` | `__bool__` |
+| `hash(obj)` | `__hash__` |
+| `with obj:` | `__enter__`, `__exit__` |
+
+### Razredne spremenljivke in metode
+
+Atribut, ki ga pripisujemo razredu (ne posamičnemu objektu), je **razredna spremenljivka** — deljen je med vsemi objekti razreda.
+
+```python
+class Zival:
+    # Razredna spremenljivka:
+    stevilo_ustvarjenih = 0
+
+    def __init__(self, ime):
+        self.ime = ime    # atribut OBJEKTA
+        Zival.stevilo_ustvarjenih += 1
+
+a = Zival("Maček")
+b = Zival("Pes")
+Zival.stevilo_ustvarjenih    # 2
+a.stevilo_ustvarjenih        # 2  (do razredne spremenljivke dostopa tudi objekt)
+```
+
+> ⚠️ Razredna spremenljivka **nikoli** ne sme biti spremenljiv objekt (seznam, slovar, množica). Enako kot pri privzetih argumentih bi se delila med vsemi objekti razreda in povzročila težko izsledljive napake.
+
+### `__hash__` — za uporabo objektov v množicah in kot ključev slovarja
+
+Če definiraš `__eq__`, je nujno definirati tudi `__hash__`, sicer postane objekt **nedoločljiv** (`unhashable`) in ga ni mogoče dati v množico ali uporabiti kot ključ.
+
+```python
+class Tocka:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
+    def __hash__(self):
+        # Pravilo: enaka objekta morata vrniti enak hash.
+        # Najlažje: hash nabora atributov, ki sodelujejo v __eq__.
+        return hash((self.x, self.y))
+
+mn = {Tocka(1, 2), Tocka(3, 4), Tocka(1, 2)}
+len(mn)   # 2 — duplikat se ujema z enim od prejšnjih
+```
+
+### `__bool__` — kdaj je objekt "truthy"
+
+Pove Pythonu, ali je objekt v `if`, `while` ali z `bool()` resničen ali lažen. Brez te metode je vsak objekt po privzetku `True`.
+
+```python
+class Vrec:
+    def __init__(self, predmeti=None):
+        self.predmeti = predmeti or []
+
+    def __bool__(self):
+        return len(self.predmeti) > 0
+
+v = Vrec()
+if v:
+    print("Vreča ni prazna.")   # se ne izvede
+```
+
+### `__call__` — objekt kot funkcija
+
+Objekt s `__call__` lahko **kličemo** kot funkcijo (`obj(x)`). To je uporabno za predmete s stanjem, npr. parametrizirane računske operacije.
+
+```python
+class Polinom:
+    def __init__(self, koeficienti):
+        self.k = koeficienti    # od najnižje stopnje navzgor
+
+    def __call__(self, x):
+        rez = 0
+        for k in reversed(self.k):
+            rez = rez * x + k    # Hornerjeva shema
+        return rez
+
+p = Polinom([1, 2, 3])    # 3x² + 2x + 1
+p(2)                       # 17
+p(0)                       # 1
+```
+
+### Dedovanje
+
+Razred lahko **podeduje** atribute in metode drugega razreda. To omogoča ponovno uporabo in razširjanje obstoječe funkcionalnosti.
+
+```python
+class Zival:
+    def __init__(self, ime):
+        self.ime = ime
+
+    def pozdravi(self):
+        return f"Pozdravljen, jaz sem {self.ime}."
+
+class Pes(Zival):    # Pes podeduje od Zival
+    def __init__(self, ime, pasma):
+        super().__init__(ime)    # kliče Zival.__init__
+        self.pasma = pasma
+
+    def pozdravi(self):
+        # Razširimo metodo iz nadrazreda:
+        osnovno = super().pozdravi()
+        return osnovno + f" Sem {self.pasma}."
+
+p = Pes("Reks", "ovčar")
+p.pozdravi()           # 'Pozdravljen, jaz sem Reks. Sem ovčar.'
+isinstance(p, Zival)   # True — Pes JE Žival
+isinstance(p, Pes)     # True
+```
+
+`super()` vrne objekt z dostopom do nadrazreda, kar nam omogoča klic nadrazredove različice metode (npr. ko `__init__` razširjamo, namesto da bi ga povsem prepisali).
+
+### Verižni klici (vračanje `self`)
+
+Vzorec, pri katerem metoda vrne `self`, da lahko klice verižimo:
+
+```python
+class Zid:
+    def __init__(self):
+        self.deli = []
+
+    def opeka(self, barva):
+        self.deli.append(f"[{barva}]")
+        return self      # ← omogoči verigo
+
+    def izpis(self):
+        return ''.join(self.deli)
+
+Zid().opeka("rdeča").opeka("modra").opeka("rdeča").izpis()
+# '[rdeča][modra][rdeča]'
+```
+
+### `@property` — atribut kot rezultat metode
+
+Z dekoratorjem `@property` se izračunana vrednost obnaša kot atribut (brez oklepajev), čeprav je v ozadju metoda. Uporabno za izpeljane količine.
+
+```python
+class Krog:
+    def __init__(self, polmer):
+        self.polmer = polmer
+
+    @property
+    def ploscina(self):
+        return 3.14159 * self.polmer ** 2
+
+    @property
+    def obseg(self):
+        return 2 * 3.14159 * self.polmer
+
+k = Krog(5)
+k.ploscina     # 78.53975   ← brez oklepajev, izgleda kot atribut
+k.obseg        # 31.4159
+```
+
 ---
 
 ## 14. Iteratorji, generatorji in iterabilni objekti
@@ -1885,6 +2058,163 @@ for i in range(len(mat)):
 # Ustvarjanje matrike n×m z ničlami:
 mat = [[0] * m for _ in range(n)]
 # POZOR: ne piši [[0]*m]*n — vse vrstice bi bile isti objekt!
+```
+
+### Iteracija s koordinatami
+
+Krajše in berljiveje kot `range(len(...))`:
+
+```python
+for i, vrstica in enumerate(mat):
+    for j, vrednost in enumerate(vrstica):
+        print(i, j, vrednost)
+```
+
+### Dostop do stolpcev in diagonal
+
+```python
+mat = [[1, 2, 3],
+       [4, 5, 6],
+       [7, 8, 9]]
+
+# Stolpec j (z izpeljanim seznamom):
+[vrstica[2] for vrstica in mat]   # [3, 6, 9]
+
+# Glavna diagonala:
+[mat[i][i] for i in range(len(mat))]              # [1, 5, 9]
+
+# Protidiagonala:
+[mat[i][-1-i] for i in range(len(mat))]           # [3, 5, 7]
+```
+
+### Transponiranje z `zip(*mat)`
+
+Eleganten trik z razpakiranjem: `*mat` razdeli matriko na posamezne vrstice, `zip` pa potem iz njih sestavi stolpce.
+
+```python
+mat = [[1, 2, 3],
+       [4, 5, 6]]
+
+list(zip(*mat))
+# [(1, 4), (2, 5), (3, 6)]
+
+# Če bi raje seznam seznamov kot seznam naborov:
+[list(v) for v in zip(*mat)]
+# [[1, 4], [2, 5], [3, 6]]
+```
+
+### Sosedi v matriki (zelo pogost vzorec na izpitih!)
+
+```python
+# 4 sosedi (gor/dol/levo/desno):
+def sosedi(mat, i, j):
+    rez = []
+    for di, dj in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+        ni, nj = i + di, j + dj
+        if 0 <= ni < len(mat) and 0 <= nj < len(mat[0]):
+            rez.append(mat[ni][nj])
+    return rez
+
+# 8 sosedov (z diagonalami):
+smeri_8 = [(di, dj) for di in [-1, 0, 1]
+                    for dj in [-1, 0, 1]
+                    if (di, dj) != (0, 0)]
+```
+
+Ta vzorec se pojavi pri igri življenja, flood fill, iskanju poti, štetju mož v okolici ipd.
+
+### Sploščenje in razgradnja v matriko
+
+```python
+# Matrika -> ravni seznam:
+ravno = [x for vrstica in mat for x in vrstica]
+
+# Ravni seznam dolžine n*m -> matrika n vrstic po m elementov:
+mat = [ravno[i*m:(i+1)*m] for i in range(n)]
+```
+
+### Kopiranje matrik
+
+Pri **gnezdenih** strukturah `mat[:]` ne zadošča (gl. tudi poglavje 11 o aliasih):
+
+```python
+mat = [[1, 2], [3, 4]]
+
+# NAROBE — vrstice so še vedno deljene:
+kopija = mat[:]
+kopija[0][0] = 99
+mat   # [[99, 2], [3, 4]]   ← spremenil se je!
+
+# PRAVILNO — vsako vrstico posebej:
+kopija = [vrstica[:] for vrstica in mat]
+# ali: kopija = [list(v) for v in mat]
+# ali: import copy; kopija = copy.deepcopy(mat)
+```
+
+### Klasične matrične operacije
+
+```python
+# Skalarno množenje:
+def pomnozi_s_skalarjem(mat, k):
+    return [[k * x for x in vrstica] for vrstica in mat]
+
+# Seštevanje matrik iste velikosti:
+def vsota_matrik(A, B):
+    return [[A[i][j] + B[i][j] for j in range(len(A[0]))]
+            for i in range(len(A))]
+
+# Množenje matrik (A je n×k, B je k×m, rezultat n×m):
+def pomnozi_matriki(A, B):
+    n, k, m = len(A), len(B), len(B[0])
+    rez = [[0] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            for s in range(k):
+                rez[i][j] += A[i][s] * B[s][j]
+    return rez
+```
+
+### Rotacije in zrcaljenja
+
+```python
+# Rotacija za 90° v desno:
+def zavrti_desno(mat):
+    return [list(v) for v in zip(*mat[::-1])]
+
+# Rotacija za 90° v levo:
+def zavrti_levo(mat):
+    return [list(v) for v in zip(*mat)][::-1]
+
+# Zrcaljenje gor/dol:
+[vrstica[:] for vrstica in mat[::-1]]
+
+# Zrcaljenje levo/desno:
+[vrstica[::-1] for vrstica in mat]
+```
+
+### Praktičen primer: en korak igre življenja
+
+```python
+def naslednji_korak(mat):
+    n, m = len(mat), len(mat[0])
+    nov = [[0] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            # preštej žive sosede
+            zivi = 0
+            for di in [-1, 0, 1]:
+                for dj in [-1, 0, 1]:
+                    if (di, dj) == (0, 0):
+                        continue
+                    ni, nj = i + di, j + dj
+                    if 0 <= ni < n and 0 <= nj < m:
+                        zivi += mat[ni][nj]
+            # pravila Conwayja
+            if mat[i][j] == 1 and zivi in (2, 3):
+                nov[i][j] = 1
+            elif mat[i][j] == 0 and zivi == 3:
+                nov[i][j] = 1
+    return nov
 ```
 
 ---
