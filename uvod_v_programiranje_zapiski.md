@@ -22,9 +22,9 @@
 15. [Datoteke](#15-datoteke)
 16. [Regularni izrazi](#16-regularni-izrazi)
 17. [Koristne vgrajene funkcije — hiter pregled](#17-koristne-vgrajene-funkcije--hiter-pregled)
-18. [Časovna zahtevnost — kratek pregled](#17½-časovna-zahtevnost--kratek-pregled)
-19. [Algoritemski vzorci](#18-algoritemski-vzorci)
-20. [Pretvorbe baz](#19-pretvorbe-baz-binarno-šestnajstiško-)
+18. [Algoritemski vzorci](#18-algoritemski-vzorci)
+19. [Matrike](#19-matrike)
+20. [Pretvorbe baz](#20-pretvorbe-baz-binarno-šestnajstiško-)
 
 ---
 
@@ -1910,11 +1910,11 @@ hash(x)        # hash vrednost (za nespremenljive objekte)
 
 ---
 
-## 17½. Časovna zahtevnost — kratek pregled
+### Časovna zahtevnost — kratek pregled
 
 Za pisni izpit je dobro vedeti, **katere operacije so hitre** in katere ne. Spodaj je tipičen Python s seznamom `n` elementov.
 
-### Seznami `[]`
+#### Seznami `[]`
 
 | Operacija | Zahtevnost | Opomba |
 |-----------|:---:|---|
@@ -1927,14 +1927,14 @@ Za pisni izpit je dobro vedeti, **katere operacije so hitre** in katere ne. Spod
 | `x in sez` | **O(n)** | |
 | `sez.sort()` | O(n log n) | |
 
-### Slovarji `{}` in množice `set`
+#### Slovarji `{}` in množice `set`
 
 | Operacija | Zahtevnost |
 |-----------|:---:|
 | `slovar[k]`, `slovar[k] = v`, `k in slovar` | **O(1)** |
 | `k in mn`, `mn.add(x)`, `mn.remove(x)` | **O(1)** |
 
-### Nizi
+#### Nizi
 
 Nizi so **nespremenljivi** — vsako "spreminjanje" naredi nov niz:
 
@@ -1951,7 +1951,7 @@ for x in sez:
 rez = ''.join(deli)
 ```
 
-### Praktične implikacije
+#### Praktične implikacije
 
 ```python
 # Iskanje v 1 000 000 elementov:
@@ -2040,7 +2040,11 @@ def gnezdeni_oklepaji(niz):
 
 Logika: uklepaje tlačimo na sklad (`append`), ob zaklepaju preverimo vrh (`pop`). Na koncu mora biti sklad prazen.
 
-### Matrike (seznam seznamov)
+---
+
+## 19. Matrike
+
+Matriko v Pythonu predstavimo kot **seznam seznamov** — vsak notranji seznam je ena vrstica.
 
 ```python
 mat = [[1, 2, 3],
@@ -2219,7 +2223,7 @@ def naslednji_korak(mat):
 
 ---
 
-## 19. Pretvorbe baz (binarno, šestnajstiško, ...)
+## 20. Pretvorbe baz (binarno, šestnajstiško, ...)
 
 ```python
 # Iz desetiškega v druge baze:
