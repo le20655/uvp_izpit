@@ -21,7 +21,9 @@
 14. [Iteratorji, generatorji in iterabilni objekti](#14-iteratorji-generatorji-in-iterabilni-objekti)
 15. [Datoteke](#15-datoteke)
 16. [Regularni izrazi](#16-regularni-izrazi)
-17. [Koristne vgrajene funkcije — hiter pregled](#18-koristne-vgrajene-funkcije--hiter-pregled)
+17. [Koristne vgrajene funkcije — hiter pregled](#17-koristne-vgrajene-funkcije--hiter-pregled)
+18. [Algoritemski vzorci](#18-algoritemski-vzorci)
+19. [Pretvorbe baz](#19-pretvorbe-baz-binarno-šestnajstiško-)
 
 ---
 
@@ -151,6 +153,23 @@ a = 25          # b ostane 13
 - Ne začnejo s številko
 - Brez presledkov (namesto tega `_`)
 
+### `==` vs `is`
+
+```python
+a = [1, 2, 3]
+b = [1, 2, 3]
+c = a
+
+a == b    # True  — enaki vrednosti
+a is b    # False — različna objekta v pomnilniku
+a is c    # True  — c kaže na ISTI objekt kot a
+```
+
+- `==` primerja **vrednosti**
+- `is` primerja **identiteto** (ali gre za isti objekt v pomnilniku)
+
+> `is` uporabljamo le za primerjavo z `None`: `if x is None:`
+
 ---
 
 ## 5. Definicije funkcij in stavek return
@@ -186,6 +205,25 @@ koren(64, n=3)   # ~4.0
 ```
 
 > ⚠️ Okoli `=` pri privzetih argumentih **ne pišemo presledkov**: `def f(x, n=2):`
+
+> ⚠️ **Privzeti argument nikoli ne sme biti spremenljiv objekt** (seznam, slovar, množica)!
+> Python ustvari privzeto vrednost **enkrat** ob definiciji funkcije — ne ob vsakem klicu.
+> ```python
+> # SLABO — seznam si "zapomni" vsebino iz prejšnjega klica:
+> def dodaj(x, sez=[]):
+>     sez.append(x)
+>     return sez
+>
+> dodaj(1)   # [1]
+> dodaj(2)   # [1, 2]  ← ni [2]!
+>
+> # PRAVILNO — privzeto None, ustvari nov seznam znotraj funkcije:
+> def dodaj(x, sez=None):
+>     if sez is None:
+>         sez = []
+>     sez.append(x)
+>     return sez
+> ```
 
 ### Stavek return
 
@@ -243,6 +281,44 @@ not True          # False
 # Kombinacije
 3 < 5 or 10 > 20     # True
 x > 0 and x < 10    # True, če je 0 < x < 10
+```
+
+### Tabele resničnosti
+
+```
+A      B      | A and B | A or B | not A | A→B
+False  False  |  False  |  False |  True | True
+False  True   |  False  |  True  |  True | True
+True   False  |  False  |  True  |  False| False
+True   True   |  True   |  True  |  False| True
+```
+
+Pogosto potrebne sestavljene operacije:
+
+| Operacija | Definicija v Pythonu |
+|-----------|----------------------|
+| implikacija (A→B) | `not a or b` |
+| ekvivalenca (A↔B) | `(not a or b) and (not b or a)` |
+| XOR | `(a and not b) or (not a and b)` |
+| NAND | `not (a and b)` |
+
+**NAND je univerzalen** — z njim lahko izrazimo vse ostale:
+```python
+def nand(a, b): return not (a and b)
+
+# not a  ≡  nand(a, a)
+# a and b  ≡  nand(nand(a, b), nand(a, b))
+# a or b  ≡  nand(nand(a, a), nand(b, b))
+```
+
+**Kratki stik (short-circuit):** Python preneha vrednotiti takoj, ko je rezultat znan.
+- `or` se ustavi pri prvem `True`
+- `and` se ustavi pri prvem `False`
+
+```python
+# Koristno: varno preverjanje brez IndexError
+sez and sez[0]          # ne vrže napake, če je sez prazen
+x != 0 and y / x > 2   # ne deli z nič, če je x == 0
 ```
 
 ### Pogojni stavek if / elif / else
@@ -1286,5 +1362,138 @@ hash(x)        # hash vrednost (za nespremenljive objekte)
 
 ---
 
-*Zapiski sledijo učbeniku Matije Pretnarja — Uvod v programiranje (2022).*
-*Dodano: vgrajene funkcije, iskanje z bisekcijo.*
+## 18. Algoritemski vzorci
+
+Pogosti vzorci, ki se pojavljajo pri reševanju nalog.
+
+### Akumulator (vsota, produkt, štetje)
+
+```python
+# Vsota
+vsota = 0
+for x in sez:
+    vsota += x
+
+# Produkt
+produkt = 1
+for x in sez:
+    produkt *= x
+
+# Štetje elementov, ki ustrezajo pogoju
+stevec = 0
+for x in sez:
+    if pogoj(x):
+        stevec += 1
+```
+
+### Iskanje minimuma / maksimuma ročno
+
+```python
+naj = sez[0]
+for x in sez[1:]:
+    if x > naj:
+        naj = x
+# naj je sedaj maksimum
+
+# Z vgrajeno funkcijo (krajše):
+naj = max(sez)
+```
+
+### Filtriranje
+
+```python
+# Z zanko:
+novi = []
+for x in sez:
+    if pogoj(x):
+        novi.append(x)
+
+# Z izpeljanim seznamom (krajše):
+novi = [x for x in sez if pogoj(x)]
+```
+
+### Štetje pojavitev v slovar
+
+```python
+stevila = {}
+for x in seznam:
+    stevila[x] = stevila.get(x, 0) + 1
+```
+
+### Sklad (stack) — npr. preverjanje gnezdenja oklepajev
+
+```python
+def gnezdeni_oklepaji(niz):
+    sklad = []
+    pari = {')': '(', ']': '[', '}': '{'}
+    for znak in niz:
+        if znak in '([{':
+            sklad.append(znak)
+        elif znak in ')]}':
+            if not sklad or sklad.pop() != pari[znak]:
+                return False
+    return not sklad
+```
+
+Logika: uklepaje tlačimo na sklad (`append`), ob zaklepaju preverimo vrh (`pop`). Na koncu mora biti sklad prazen.
+
+### Matrike (seznam seznamov)
+
+```python
+mat = [[1, 2, 3],
+       [4, 5, 6]]
+
+mat[i][j]           # element v vrstici i, stolpcu j
+len(mat)            # število vrstic
+len(mat[0])         # število stolpcev
+
+# Iteracija po vseh elementih:
+for i in range(len(mat)):
+    for j in range(len(mat[0])):
+        print(mat[i][j])
+
+# Ustvarjanje matrike n×m z ničlami:
+mat = [[0] * m for _ in range(n)]
+# POZOR: ne piši [[0]*m]*n — vse vrstice bi bile isti objekt!
+```
+
+---
+
+## 19. Pretvorbe baz (binarno, šestnajstiško, ...)
+
+```python
+# Iz desetiškega v druge baze:
+bin(10)        # '0b1010'  (binarna)
+oct(8)         # '0o10'    (osmiška)
+hex(255)       # '0xff'    (šestnajstiška)
+
+# Iz druge baze v desetiško:
+int('1010', 2)   # 10   (iz binarne)
+int('ff', 16)    # 255  (iz šestnajstiške)
+int('17', 8)     # 15   (iz osmiške)
+```
+
+```python
+# Splošna pretvorba iz niza v dani bazi v desetiško:
+import string
+
+def pretvori(niz, baza):
+    """Pretvori niz v dani bazi v desetiško število."""
+    znaki = '0123456789' + string.ascii_uppercase
+    rezultat = 0
+    for znak in niz.upper():
+        rezultat = rezultat * baza + znaki.index(znak)
+    return rezultat
+
+pretvori('FF', 16)    # 255
+pretvori('1010', 2)   # 10
+```
+
+Rekurzivna različica (en znak = zadnji, preostanek rekurzivno):
+```python
+def pretvori(niz, baza):
+    znaki = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    if niz == '':
+        return 0
+    return pretvori(niz[:-1], baza) * baza + znaki.index(niz[-1].upper())
+```
