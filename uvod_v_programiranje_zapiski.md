@@ -22,8 +22,9 @@
 15. [Datoteke](#15-datoteke)
 16. [Regularni izrazi](#16-regularni-izrazi)
 17. [Koristne vgrajene funkcije — hiter pregled](#17-koristne-vgrajene-funkcije--hiter-pregled)
-18. [Algoritemski vzorci](#18-algoritemski-vzorci)
-19. [Pretvorbe baz](#19-pretvorbe-baz-binarno-šestnajstiško-)
+18. [Časovna zahtevnost — kratek pregled](#17½-časovna-zahtevnost--kratek-pregled)
+19. [Algoritemski vzorci](#18-algoritemski-vzorci)
+20. [Pretvorbe baz](#19-pretvorbe-baz-binarno-šestnajstiško-)
 
 ---
 
@@ -91,6 +92,33 @@ x *= 2    # x = x * 2
 x //= 2   # x = x // 2
 x **= 2   # x = x ** 2
 x %= 2    # x = x % 2
+```
+
+### `divmod` — celoštevilsko deljenje in ostanek hkrati
+
+```python
+divmod(17, 5)    # (3, 2)   ker je 17 = 3*5 + 2
+divmod(7, 2)     # (3, 1)
+```
+
+Uporabno pri pretvorbah enot in delu z bazami:
+
+```python
+# Sekunde -> ure, minute, sekunde:
+def cas(sek):
+    ure, sek = divmod(sek, 3600)
+    minute, sek = divmod(sek, 60)
+    return ure, minute, sek
+
+cas(3725)   # (1, 2, 5)  -> 1h 2min 5s
+
+# Število -> seznam števk v dani bazi:
+def stevke(n, baza=10):
+    rez = []
+    while n > 0:
+        n, r = divmod(n, baza)
+        rez.append(r)
+    return rez[::-1]
 ```
 
 ---
@@ -249,6 +277,73 @@ f(4)            # vrne 12, globalne y ne spremeni
 y               # še vedno 10
 ```
 
+### `*args` in `**kwargs` — poljubno število argumentov
+
+```python
+# *args zbira pozicijske argumente v nabor:
+def vsota(*stevila):
+    rez = 0
+    for x in stevila:
+        rez += x
+    return rez
+
+vsota(1, 2, 3)        # 6
+vsota(1, 2, 3, 4, 5)  # 15
+
+# **kwargs zbira poimenovane argumente v slovar:
+def opisi(**lastnosti):
+    for kljuc, vrednost in lastnosti.items():
+        print(f"{kljuc}: {vrednost}")
+
+opisi(ime="Ana", starost=22, smer="UVP")
+
+# Kombinacija (vrstni red: pozicijski, *args, privzeti, **kwargs):
+def f(a, b, *args, c=10, **kwargs):
+    ...
+```
+
+Operator `*` (ali `**`) lahko uporabimo tudi pri **klicu** funkcije, da razpakiramo seznam (ali slovar) v argumente:
+
+```python
+sez = [3, 1, 4]
+max(*sez)            # = max(3, 1, 4) = 4
+
+slovar = {'sep': '-', 'end': '!\n'}
+print('a', 'b', 'c', **slovar)   # 'a-b-c!'
+```
+
+### Funkcije so prvorazredni objekti
+
+V Pythonu lahko funkcije:
+- shranimo v spremenljivko,
+- damo kot argument drugi funkciji,
+- vrnemo iz funkcije,
+- shranimo v sezname/slovarje.
+
+```python
+def kvadrat(x): return x * x
+def kub(x): return x ** 3
+
+f = kvadrat            # f zdaj kaže na funkcijo
+f(5)                   # 25
+
+operacije = [kvadrat, kub, abs]
+[f(3) for f in operacije]   # [9, 27, 3]
+
+# To je razlog, da deluje key= pri sorted/min/max:
+besede = ['hruška', 'jabolko', 'češnja']
+sorted(besede, key=len)         # ['hruška', 'češnja', 'jabolko']
+sorted(besede, key=str.lower)
+max([(1, 'a'), (3, 'b'), (2, 'c')], key=lambda par: par[0])   # (3, 'b')
+```
+
+**Lambda izrazi** so anonimne funkcije za enkratno uporabo:
+
+```python
+kvadrat = lambda x: x * x       # ekvivalentno def kvadrat(x): return x*x
+sorted([-3, 1, -2], key=lambda x: abs(x))   # [1, -2, -3]
+```
+
 ---
 
 ## 6. Logične vrednosti in pogojni stavek
@@ -352,6 +447,43 @@ def absolutna_vrednost(x):
     return x if x >= 0 else -x
 ```
 
+### Resnične in lažne vrednosti (truthy / falsy)
+
+Python ima poleg `True`/`False` še **resnično vrednost vsakega objekta**. V `if`, `while`, `and`, `or` in `not` se objekti samodejno pretvorijo v logično vrednost.
+
+**Lažne (falsy) vrednosti:**
+
+```python
+bool(False)      # False
+bool(None)       # False
+bool(0)          # False
+bool(0.0)        # False
+bool('')         # False  (prazen niz)
+bool([])         # False  (prazen seznam)
+bool({})         # False  (prazen slovar)
+bool(set())      # False  (prazna množica)
+bool(())         # False  (prazen nabor)
+```
+
+**Vse ostalo je truthy** — vsak neprazen niz/seznam/slovar, vsako neničelno število.
+
+```python
+# Idiomatični načini:
+if sez:                 # "če seznam ni prazen"
+    ...
+
+if not slovar:          # "če je slovar prazen"
+    ...
+
+# Privzete vrednosti z `or`:
+ime = vneseno_ime or 'Anonimno'   # če je vneseno_ime '', vzemi 'Anonimno'
+
+# Pozor: `or` vrne en operand, ne obvezno True/False:
+0 or 'a'    # 'a'
+'a' or 'b'  # 'a'
+[] or [1]   # [1]
+```
+
 ---
 
 ## 7. Vrste napak
@@ -385,6 +517,72 @@ Najhujše — Python ne javi napake, a odgovor je **napačen**.
 ```
 
 **Preprečevanje:** berljiva koda, opisna imena, presledki okoli operatorjev, sproti testiramo.
+
+### Lovljenje napak — `try/except`
+
+Včasih napake **pričakujemo** in jih hočemo obravnavati namesto, da program propade.
+
+```python
+try:
+    n = int(input("Vnesi število: "))
+except ValueError:
+    print("To ni veljavno število!")
+    n = 0
+```
+
+Polna oblika:
+
+```python
+try:
+    # poskusi nekaj nevarnega
+    rez = a / b
+except ZeroDivisionError:
+    # izvede se SAMO ob tej napaki
+    print("Deljenje z nič!")
+except (ValueError, TypeError) as e:
+    # lahko ujamemo več napak hkrati in pridobimo objekt napake
+    print(f"Druga napaka: {e}")
+else:
+    # izvede se, če NI bilo napake
+    print(f"Rezultat: {rez}")
+finally:
+    # izvede se VEDNO (uporabno za zapiranje datotek/povezav)
+    print("Konec.")
+```
+
+### Sprožanje napak — `raise`
+
+```python
+def deli(a, b):
+    if b == 0:
+        raise ValueError("Drugi argument ne sme biti 0.")
+    return a / b
+```
+
+### Stavek `assert`
+
+Trditev, da nekaj velja. Če ne velja, sproži `AssertionError`. Uporaben za sanity checks med razvojem.
+
+```python
+def koren(x):
+    assert x >= 0, f"Pričakoval nenegativno število, dobil {x}."
+    return x ** 0.5
+```
+
+### Pomembne standardne izjeme
+
+| Izjema | Kdaj se zgodi |
+|--------|---------------|
+| `ValueError` | `int("abc")`, `math.sqrt(-1)` — napačna vrednost prave vrste |
+| `TypeError` | `'a' + 1`, `len(5)` — operacija nad napačnim tipom |
+| `ZeroDivisionError` | deljenje z nič |
+| `IndexError` | `sez[100]` — indeks zunaj območja |
+| `KeyError` | `slovar['ni_v_njem']` — ključ ne obstaja |
+| `NameError` | uporaba spremenljivke/funkcije, ki ni definirana |
+| `AttributeError` | `niz.napacna_metoda()` |
+| `FileNotFoundError` | `open('ne_obstaja.txt')` |
+| `StopIteration` | `next()` na praznem iteratorju |
+| `RecursionError` | preglobok rekurzivni klic |
 
 ---
 
@@ -445,6 +643,57 @@ def bisekcija(f, a, b, eps=1e-10):
             a = c
     return (a + b) / 2
 ```
+
+### Binarno iskanje v urejenem seznamu (deli in vladaj)
+
+```python
+def binarno_iskanje(sez, x):
+    """Vrne indeks elementa x v urejenem seznamu sez, ali -1, če ga ni."""
+    levo, desno = 0, len(sez) - 1
+    while levo <= desno:
+        sredina = (levo + desno) // 2
+        if sez[sredina] == x:
+            return sredina
+        elif sez[sredina] < x:
+            levo = sredina + 1
+        else:
+            desno = sredina - 1
+    return -1
+
+# Rekurzivna različica:
+def binarno_rek(sez, x, levo=0, desno=None):
+    if desno is None:
+        desno = len(sez) - 1
+    if levo > desno:
+        return -1
+    sredina = (levo + desno) // 2
+    if sez[sredina] == x:
+        return sredina
+    elif sez[sredina] < x:
+        return binarno_rek(sez, x, sredina + 1, desno)
+    else:
+        return binarno_rek(sez, x, levo, sredina - 1)
+```
+
+Iskanje v seznamu z `n` elementi vzame `O(log n)` korakov — pri milijonu elementov **20 korakov** namesto milijon.
+
+### Pozor: naivni Fibonacci je eksponenten
+
+```python
+# SLABA verzija — O(2^n) klicev, fib(40) traja sekundo, fib(50) minute:
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+
+# DOBRA verzija — O(n), z akumulatorjema:
+def fib(n, a=0, b=1):
+    if n == 0:
+        return a
+    return fib(n - 1, b, a + b)
+```
+
+Razlog: naivna različica izračuna isto vrednost **ponovno in ponovno**. Pri vsakem rekurzivnem branjenju se veji navzdol kot dvojiško drevo.
 
 ---
 
@@ -547,6 +796,23 @@ s.isupper()         # True, če so samo velike črke
 s.isalnum()         # True, če so črke ali števke
 s.isspace()         # True, če so samo beli znaki
 ```
+
+### `partition` in `rpartition`
+
+Razdelita niz na **tri dele**: del pred prvo (oz. zadnjo) pojavitvijo ločila, ločilo samo, in del za njim. Vrneta nabor dolžine 3 tudi, če ločila ni.
+
+```python
+'janez@kranjsko.si'.partition('@')
+# ('janez', '@', 'kranjsko.si')
+
+'a=b=c'.partition('=')    # ('a', '=', 'b=c')   prvo
+'a=b=c'.rpartition('=')   # ('a=b', '=', 'c')   zadnje
+
+'brez_locila'.partition('@')
+# ('brez_locila', '', '')
+```
+
+Pogosto bolj priročno od `.split()`, ko nas zanima točno **eno** ločilo.
 
 ### f-nizi (formatted strings)
 
@@ -732,6 +998,29 @@ b               # [1, 2, 1]
 b = a[:]        # ali: b = list(a)
 ```
 
+### Plitka vs globoka kopija
+
+Pri **gnezdenih** seznamih `a[:]` ne zadošča — skopira le zunanji seznam, notranji ostanejo skupni:
+
+```python
+a = [[1, 2], [3, 4]]
+b = a[:]          # plitka kopija
+b[0].append(99)
+a                 # [[1, 2, 99], [3, 4]]   ← spremenil se je tudi a!
+
+# Rešitev: globoka kopija
+import copy
+b = copy.deepcopy(a)
+b[0].append(99)
+a                 # [[1, 2], [3, 4]]       ← nedotaknjeno
+```
+
+| Operacija | Kopira zunanji? | Kopira notranje? |
+|-----------|:---:|:---:|
+| `b = a` | ne (samo alias) | ne |
+| `b = a[:]` ali `list(a)` | da | ne |
+| `copy.deepcopy(a)` | da | da |
+
 ### Vgrajene metode na seznamih
 
 ```python
@@ -891,6 +1180,59 @@ prestej_pojavitve('abrakadabra')
 
 > ⚠️ Ključi morajo biti **nespremenljivi** (nizi, števila, nabori — ne pa seznami!).
 > Zanka vrača ključe v vrstnem redu dodajanja (Python 3.7+).
+
+### `setdefault` — krajša pot za "če ni, dodaj"
+
+```python
+# Klasično grupiranje v seznam vrednosti:
+skupine = {}
+for ime, mesto in [('Ana', 'LJ'), ('Bine', 'MB'), ('Cene', 'LJ')]:
+    skupine.setdefault(mesto, []).append(ime)
+# skupine = {'LJ': ['Ana', 'Cene'], 'MB': ['Bine']}
+```
+
+`setdefault(k, privzeto)` vrne `s[k]`, če obstaja, sicer ga nastavi na `privzeto` in vrne tega.
+
+### `collections.Counter` in `collections.defaultdict`
+
+Knjižnica `collections` ponuja **pripravljena** orodja za pogoste vzorce.
+
+**`Counter`** je slovar za štetje pojavitev:
+
+```python
+from collections import Counter
+
+c = Counter('abrakadabra')
+# Counter({'a': 5, 'b': 2, 'r': 2, 'k': 1, 'd': 1})
+
+c.most_common(2)        # [('a', 5), ('b', 2)]   ← top 2
+c['a']                  # 5
+c['z']                  # 0  (manjkajoči ne sprožijo KeyError!)
+
+# Lahko ga uporabimo tudi nad seznamom:
+Counter(['jabolko', 'hruška', 'jabolko'])
+# Counter({'jabolko': 2, 'hruška': 1})
+
+# Counter podpira aritmetiko:
+Counter('aab') + Counter('abc')   # Counter({'a': 3, 'b': 2, 'c': 1})
+```
+
+**`defaultdict`** je slovar s **privzeto vrednostjo** za neobstoječe ključe:
+
+```python
+from collections import defaultdict
+
+skupine = defaultdict(list)   # privzeta vrednost = prazen seznam
+for ime, mesto in [('Ana', 'LJ'), ('Bine', 'MB'), ('Cene', 'LJ')]:
+    skupine[mesto].append(ime)
+# defaultdict(<class 'list'>, {'LJ': ['Ana', 'Cene'], 'MB': ['Bine']})
+
+# defaultdict(int) za štetje:
+stevec = defaultdict(int)
+for znak in 'abrakadabra':
+    stevec[znak] += 1
+# defaultdict(<class 'int'>, {'a': 5, 'b': 2, 'r': 2, 'k': 1, 'd': 1})
+```
 
 ### Množice
 
@@ -1096,6 +1438,39 @@ for x in zap:
 - **Iterator**: ima `__next__`, pauzira in nadaljuje, "zapomni si" stanje.
 - **Iterabilni objekt**: ima `__iter__`, ki vrne (svež) iterator.
 - **Generator**: posebna vrsta iteratorja, narejen s funkcijo z `yield`.
+
+### Generatorski izrazi
+
+Kot izpeljani seznami, a z okroglimi oklepaji — **ne** ustvarijo celotnega seznama v pomnilniku, ampak vrednosti generirajo sproti:
+
+```python
+[x**2 for x in range(10)]    # SEZNAM — vseh 10 vrednosti je v pomnilniku
+(x**2 for x in range(10))    # GENERATOR — vrednosti se računajo sproti
+
+# Pri velikih (ali neskončnih) količinah podatkov:
+sum(x**2 for x in range(10**8))    # učinkovito, brez seznama v pomnilniku
+
+# Pri funkcijah, ki sprejmejo iterable, oklepajev sploh ne rabimo:
+any(x > 100 for x in stevila)       # vrne True takoj, ko najde prvega
+all(x > 0 for x in stevila)         # vrne False takoj, ko najde prvega <=0
+max(len(b) for b in besede)
+```
+
+**Razlika v praksi:**
+
+| | Izpeljani seznam `[...]` | Generatorski izraz `(...)` |
+|---|---|---|
+| Pomnilnik | shrani vse | drsi po enem elementu |
+| Hitrost ustvarjanja | naredi vse takoj | lenobno |
+| Lahko ga gledamo večkrat | ja | ne (po prvem prehodu prazen) |
+| Podpira `len()`, indeksiranje | ja | ne |
+
+`any` in `all` na generatorjih sta še posebej močna, ker se ustavita ob prvem zadetku (kratki stik):
+
+```python
+def vsebuje_negativno(sez):
+    return any(x < 0 for x in sez)
+```
 
 ---
 
@@ -1358,6 +1733,61 @@ help(f)        # izpiše dokumentacijo funkcije f
 dir(obj)       # izpiše atribute/metode objekta
 id(x)          # identifikator objekta (naslov v pomnilniku)
 hash(x)        # hash vrednost (za nespremenljive objekte)
+```
+
+---
+
+## 17½. Časovna zahtevnost — kratek pregled
+
+Za pisni izpit je dobro vedeti, **katere operacije so hitre** in katere ne. Spodaj je tipičen Python s seznamom `n` elementov.
+
+### Seznami `[]`
+
+| Operacija | Zahtevnost | Opomba |
+|-----------|:---:|---|
+| `sez[i]` (dostop) | O(1) | hitro |
+| `sez[i] = x` (zamenjava) | O(1) | hitro |
+| `len(sez)` | O(1) | shranjeno posebej |
+| `sez.append(x)` | O(1) | amortizirano |
+| `sez.pop()` (zadnji) | O(1) | |
+| `sez.pop(0)` ali `sez.insert(0, x)` | **O(n)** | premakniti je treba vse |
+| `x in sez` | **O(n)** | |
+| `sez.sort()` | O(n log n) | |
+
+### Slovarji `{}` in množice `set`
+
+| Operacija | Zahtevnost |
+|-----------|:---:|
+| `slovar[k]`, `slovar[k] = v`, `k in slovar` | **O(1)** |
+| `k in mn`, `mn.add(x)`, `mn.remove(x)` | **O(1)** |
+
+### Nizi
+
+Nizi so **nespremenljivi** — vsako "spreminjanje" naredi nov niz:
+
+```python
+# SLABO — O(n²): vsak += naredi nov niz cele dolžine
+rez = ''
+for x in sez:
+    rez += str(x)
+
+# DOBRO — O(n): v seznam, nato join na koncu
+deli = []
+for x in sez:
+    deli.append(str(x))
+rez = ''.join(deli)
+```
+
+### Praktične implikacije
+
+```python
+# Iskanje v 1 000 000 elementov:
+x in seznam       # do milijona primerjav
+x in mnozica      # ena operacija!
+
+# Če veliko preverjamo `x in nekaj`, raje pretvori v množico:
+veliki = set(velik_seznam)
+[x for x in y if x in veliki]    # zdaj hitro
 ```
 
 ---
