@@ -6,7 +6,7 @@ Zapiski, rešeni izpiti in vaje za predmet **Uvod v programiranje** (Python).
 
 | Datoteka | Odgovarja na vprašanje |
 |---|---|
-| [`izpitni_prirocnik.md`](izpitni_prirocnik.md) | **Kako se naloge lotim?** Postopek reševanja podnaloge v sedmih korakih, snov razvrščena po *tipih nalog*, kuharica s kodo za prepis, pregled kaj se na izpitih ponavlja in načrt za zadnja dva dneva. |
+| [`izpitni_prirocnik.md`](izpitni_prirocnik.md) | **Kako se naloge lotim?** Postopek reševanja podnaloge v sedmih korakih, snov razvrščena po *tipih nalog*, koda za prepis, pregled kaj se na izpitih ponavlja in načrt za zadnja dva dneva. |
 | [`uvod_v_programiranje_zapiski.md`](uvod_v_programiranje_zapiski.md) | **Kako deluje Python?** Zapiski celotne snovi — od osnovnih tipov do razredov, generatorjev, datotek in regularnih izrazov. |
 | [`izpiti.md`](izpiti.md) | Vseh devet izpitnih rokov (2023/24, 2024/25, 2025/26), rešenih in razloženih: 27 nalog × 3 podnaloge. Vseh 81 rešitev je **preverjenih** z vgrajenimi testi Projekta Tomo. |
 | [`vaje_in_naloge.md`](vaje_in_naloge.md) | Vaje po temah in vzorčne naloge za utrjevanje (rešitve pregledane, a brez uradnih testov). |
