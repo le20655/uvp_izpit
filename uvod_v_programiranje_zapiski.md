@@ -25,6 +25,7 @@
 18. [Algoritemski vzorci](#18-algoritemski-vzorci)
 19. [Matrike](#19-matrike)
 20. [Pretvorbe baz](#20-pretvorbe-baz-binarno-šestnajstiško-)
+21. [Pasti, ki jih izpit rad preverja](#21-pasti-ki-jih-izpit-rad-preverja)
 
 ---
 
@@ -2261,3 +2262,135 @@ def pretvori(niz, baza):
         return 0
     return pretvori(niz[:-1], baza) * baza + znaki.index(niz[-1].upper())
 ```
+
+
+---
+
+## 21. Pasti, ki jih izpit rad preverja
+
+Razdelek zbira napake, ki so dejansko nastale pri reševanju izpitov iz
+[`izpiti_2324.md`](izpiti_2324.md). Vsaka je taka, da program **deluje**, a
+vrne napačen rezultat — prav zato jih je težko opaziti.
+
+### Nabor z enim elementom potrebuje vejico
+
+```python
+(x)        # to NI nabor, to je samo x v oklepajih
+(x, )      # nabor z enim elementom
+type((5))  # <class 'int'>
+type((5,)) # <class 'tuple'>
+```
+
+Enako velja za vrnjeno vrednost: `return dolzina, seznam` vrne **nabor**
+`(dolzina, seznam)`, tudi če si mislil vrniti dvoje ločeno.
+
+### Niz, ki je videti kot podatkovna struktura, ni podatkovna struktura
+
+```python
+"('A', ('B',))"       # niz — dolg 15 znakov
+('A', ('B',))         # nabor — dolg 2
+```
+
+Če naloga zahteva nabor ali seznam, ga je treba res sestaviti. Izpis je videti
+enak, primerjava v testih pa pade.
+
+### `==` proti `is`
+
+`==` primerja **vsebino**, `is` primerja **identiteto** (ali je to isti objekt
+v pomnilniku).
+
+```python
+a = [1, 2]
+b = [1, 2]
+a == b     # True  — enaka vsebina
+a is b     # False — različna objekta
+```
+
+Kadar naloga zahteva, da vrneš »natanko tisti seznam, ki si ga dobil«, ne smeš
+vrniti kopije (`sez[:]`, `list(sez)`). In obratno: kadar funkcija seznam
+spreminja, si na začetku naredi kopijo, sicer pokvariš klicateljev seznam.
+
+### Sprehod po nizu gre po znakih, ne po vrsticah ali besedah
+
+```python
+for znak in besedilo:      # posamezni znaki
+for vrstica in besedilo.split("\n"):   # vrstice
+for beseda in besedilo.split():        # besede
+```
+
+Iz istega izvira napaka `if znak == "\n\n"` — en znak ne more biti enak dvema.
+
+### Prazen niz in `-1` sta zoprna soseda
+
+```python
+"" in "aeiou"       # True!  prazen niz je podniz vsakega niza
+niz[:-0]            # prazen niz, ne "cel niz"
+niz.find("q")       # -1, kar je veljaven indeks od zadaj
+```
+
+Vse tri se pojavijo, kadar računaš z robovi. Namesto praznega niza uporabi
+nadomestni znak (npr. `"-"`), pred rezino z izračunanim negativnim številom pa
+preveri primer, ko je število `0`.
+
+### `.index()` v zanki vrne prvo pojavitev, ne trenutne
+
+```python
+for znak in niz:
+    i = niz.index(znak)     # ❌ pri ponovljenem znaku vedno isto mesto
+```
+
+Če rabiš indeks med sprehodom, uporabi `enumerate(niz)` ali `range(len(niz))`.
+
+### Zadnja skupina se izgubi
+
+Vzorec »štej in shrani ob ločnici« potrebuje **tri** dele:
+
+```python
+skupine, stevec = [], 0
+for x in podatki:
+    if je_locnica(x):
+        skupine.append(stevec)      # 2. shrani ob ločnici
+        stevec = 0
+    else:
+        stevec += 1                 # 1. štej
+skupine.append(stevec)              # 3. IZPIRANJE po zanki
+```
+
+Brez tretjega dela zadnja skupina nikoli ne pride v rezultat.
+
+### Hkratno prirejanje ni isto kot dve prirejanji
+
+```python
+a, b = b, a          # ✅ zamenja vrednosti — desna stran se izračuna prej
+a = b
+b = a                # ❌ zdaj sta oba enaka staremu b
+```
+
+Velja tudi za atribute dveh objektov (`x.p, y.p = y.p, x.p`).
+
+### Privzeta vrednost argumenta se ustvari **enkrat**
+
+```python
+def f(x, zbirka=[]):     # ❌ isti seznam pri vseh klicih
+    zbirka.append(x)
+    return zbirka
+
+def f(x, zbirka=None):   # ✅
+    if zbirka is None:
+        zbirka = []
+    zbirka.append(x)
+    return zbirka
+```
+
+### Ko besedilo naloge in testi trdita različno, veljajo testi
+
+Primer iz 3. roka 2023/24: naloga pravi »črke `r`, ki ne stojijo ob
+**soglasniku**«, iz primerov pa sledi, da `r` šteje, kadar ni ob
+**samoglasniku**. Preden pišeš kodo, na roko preveri vsaj dva primera iz
+besedila — če se ne izideta, si nalogo razumel drugače, kot je mišljena.
+
+### Prekopirana podnaloga ostane prekopirana
+
+Če rešitev prejšnje podnaloge uporabiš kot izhodišče, jo je treba tudi
+predelati. Sicer testi javijo napako pri podnalogi, za katero si prepričan, da
+je rešena — najdražja vrsta napake na izpitu.
