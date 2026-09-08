@@ -1849,6 +1849,63 @@ def __lt__(self, other):
 
 `__lt__` z naborom je najlažji način za "primerjaj po prvem, pri enakem po drugem".
 
+**`__repr__` proti `__str__` — kaj katera predstavlja**
+
+Obe pretvorita objekt v niz. Razlika je, **komu je niz namenjen**.
+
+| | `__str__` | `__repr__` |
+|---|---|---|
+| namenjen | uporabniku | programerju |
+| cilj | berljivo | nedvoumno |
+| kliče se ob | `print(o)`, `str(o)`, `f"{o}"` | `repr(o)`, odziv lupine (`>>> o`), `f"{o!r}"` |
+| **objekt v vsebniku** | — | **da**: `[o]`, `{'x': o}`, `(o,)` |
+
+Zadnja vrstica je tista, ki preseneti: seznam in slovar za svoje elemente **vedno**
+kličeta `repr`, nikoli `str`.
+
+```python
+class Naseljenec:                          # izpit 24/25 i1, naloga 2
+    def __init__(self, ime):
+        self.ime = ime
+        self.dobrine = []
+
+    def __repr__(self):
+        return f"Naseljenec({self.ime!r})"          # kot klic konstruktorja
+
+    def __str__(self):
+        return f"Naseljenec {self.ime} z dobrinami {self.dobrine}"
+```
+
+```
+>>> ana = Naseljenec('Ana'); ana.dobrine = ['ovca', 'kamen']
+>>> print(ana)
+Naseljenec Ana z dobrinami ['ovca', 'kamen']      # __str__
+>>> ana
+Naseljenec('Ana')                                  # __repr__ (odziv lupine)
+>>> [ana]
+[Naseljenec('Ana')]                                # __repr__, čeprav je to print!
+```
+
+Konvencija za `__repr__`: naj izgleda kot **klic konstruktorja**, tako da bi
+`eval(repr(o))` sestavil enak objekt. Zato `Naseljenec('Ana')` in ne kaj opisnega.
+
+**Čemu `!r`**
+
+```python
+f"Naseljenec({self.ime!r})"   ->   Naseljenec('Ana')     # narekovaji so tu
+f"Naseljenec({self.ime})"     ->   Naseljenec(Ana)       # brez njih -> test pade
+```
+
+`!r` pomeni "na to vrednost uporabi `repr` namesto `str`". Ker je `repr('Ana')` niz
+`"'Ana'"`, se narekovaji pojavijo sami. Brez `!r` rezultat ni veljavna Python koda.
+
+**Pravilo, ki ti prihrani delo:** če definiraš samo `__repr__`, ga Python uporabi
+**tudi** za `str()` in `print()` — dobiš oboje zastonj. Obratno ne velja: samo
+`__str__` pusti `repr()` pri privzetem `<__main__.Naseljenec object at 0x000001C4...>`.
+Če torej pišeš eno samo, naj bo `__repr__`.
+
+Obe **vrneta** niz z `return`. `print` namesto `return` v njiju je napaka.
+
 ### 7c. Metoda, ki vrne NOV objekt istega razreda
 
 Aritmetika (`Ulomek`, `Polinom`) in množične operacije (`Stevec`, izpit 25/26 i1)

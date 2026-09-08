@@ -1274,6 +1274,178 @@ mn -= {1}             # razlika na mestu
 
 ---
 
+### Primerjava zbirk — seznam, nabor, množica, slovar
+
+Vse štiri hranijo več vrednosti hkrati, a se ločijo po štirih lastnostih:
+**ali se dajo spreminjati**, **ali imajo vrstni red**, **ali dovolijo podvojene
+vrednosti** in **kako hitro odgovorijo na `in`**.
+
+| | seznam `list` | nabor `tuple` | množica `set` | slovar `dict` | niz `str` |
+|---|---|---|---|---|---|
+| zapis | `[1, 2, 3]` | `(1, 2, 3)` | `{1, 2, 3}` | `{'a': 1}` | `'abc'` |
+| prazen | `[]` | `()` | `set()` | `{}` | `''` |
+| spremenljiv | da | **ne** | da | da | **ne** |
+| ohranja vrstni red | da | da | **ne** | da (od 3.7) | da |
+| dovoli podvojitve | da | da | **ne** | ključi ne, vrednosti da |  da |
+| dostop po indeksu | `s[0]` | `t[0]` | **ne** | po ključu `d['a']` | `n[0]` |
+| `x in ...` | O(n) | O(n) | **O(1)** | **O(1)** (po ključih) | O(n), podniz |
+| se da dati v množico / rabiti za ključ | **ne** | da* | ne (`frozenset` da) | ne | da |
+
+\* nabor je uporaben kot ključ le, če so **vsi njegovi elementi** nespremenljivi:
+`{(1, 2): 'a'}` deluje, `{([1],): 'a'}` pa vrže `TypeError: unhashable type: 'list'`.
+
+**Zakaj to velja.** Množica in slovar elemente hranita po *razpršilni vrednosti*
+(`hash`). Ta se mora izračunati enkrat in se nikoli ne sme spremeniti — sicer
+Python vrednosti ne bi našel več. Zato sme biti notri le nespremenljiv objekt.
+Prav ta zahteva prinese hitrost: `in` ne pregleda vseh elementov, ampak izračuna
+`hash` in pogleda naravnost na pravo mesto.
+
+```python
+sez = list(range(100000))
+mno = set(sez)
+99999 in sez        # pregleda vseh 100000 elementov
+99999 in mno        # en izračun hasha
+```
+Izmerjeno na tem računalniku je razlika približno **10000-kratna**. Pri seznamu
+z desetimi elementi je nepomembna, pri tisočih pa je razlika med rešitvijo,
+ki se izteče, in tisto, ki ne.
+
+#### Hitrost pogostih operacij
+
+| operacija | seznam | množica / slovar |
+|---|---|---|
+| `x in z` | O(n) | O(1) |
+| dodajanje na konec | `append` O(1) | `add` / `d[k] = v` O(1) |
+| dodajanje na začetek | `insert(0, x)` **O(n)** | — |
+| brisanje | `remove(x)` O(n), `pop()` O(1) | `discard(x)` O(1) |
+| dostop po mestu | `s[i]` O(1) | ni mogoč |
+
+Iz tega sledi pravilo, ki največkrat popravi počasno rešitev:
+**če v zanki sprašuješ `if x not in videni`, naj bo `videni` množica, ne seznam.**
+
+```python
+# počasno — O(n²)
+videni = []
+for x in podatki:
+    if x not in videni:
+        videni.append(x)
+
+# hitro — O(n), in krajše
+videni = set(podatki)
+```
+
+#### Kdaj katero uporabiti
+
+| Kar potrebuješ | Uporabi |
+|---|---|
+| zaporedje enakovrednih vrednosti, ki se spreminja | **seznam** |
+| nekaj vrednosti z **različnimi pomeni** in fiksno dolžino (datum, koordinata, par `(oseba, besedilo)`) | **nabor** |
+| vrniti več vrednosti iz funkcije | **nabor** |
+| ključ v slovarju ali element množice | **nabor** |
+| samo vprašanje »ali se je to že pojavilo?« | **množica** |
+| odstraniti podvojitve | **množica** |
+| preseki, unije, razlike med zbirkami | **množica** |
+| preslikava iz nečesa v nekaj (ime → število, vsota → seznam dobrin) | **slovar** |
+| štetje pojavitev | **slovar** (ali `Counter`) |
+| grupiranje v skupine | **slovar seznamov** (`setdefault` / `defaultdict`) |
+
+Kratko pravilo: **seznam** za *zaporedje*, **nabor** za *zapis*, **množica** za
+*pripadnost*, **slovar** za *preslikavo*.
+
+#### Pretvorbe
+
+```python
+list('abc')                 # ['a', 'b', 'c']
+tuple([1, 2])               # (1, 2)
+set([1, 2, 2, 3])           # {1, 2, 3}       -- odstrani podvojitve
+list({3, 1, 2})             # [1, 2, 3]       -- vrstni red NI zajamčen
+sorted({3, 1, 2})           # [1, 2, 3]       -- sorted vedno vrne seznam
+''.join(['a', 'b'])         # 'ab'
+dict([('a', 1), ('b', 2)])  # {'a': 1, 'b': 2}
+list({'a': 1}.items())      # [('a', 1)]
+frozenset([1, 2])           # nespremenljiva množica -- sme biti ključ
+```
+
+Zaporedje **odstrani podvojitve, vrstni red pa ohrani** — pogosta izpitna
+podnaloga; `set` sam tega ne zna:
+
+```python
+def brez_podvojitev(zaporedje):
+    videni = set()
+    rezultat = []
+    for x in zaporedje:
+        if x not in videni:
+            videni.add(x)
+            rezultat.append(x)
+    return rezultat
+```
+
+#### Pasti, ki jih je vredno poznati
+
+```python
+{}                  # to je prazen SLOVAR, ne množica; prazna množica je set()
+(1)                 # to je število 1 -- nabor z enim elementom je (1,)
+```
+
+**Naboru se ne da spremeniti dolžine, njegovi elementi pa so lahko spremenljivi:**
+
+```python
+t = ([1, 2], 3)
+t[0].append(9)      # deluje! nabor drži isti seznam, seznam pa se je spremenil
+t[0] = [5]          # TypeError -- tega ne gre
+hash(t)             # TypeError -- ker vsebuje seznam, ni razpršljiv
+```
+
+**Prirejanje ne kopira**, ampak da drugo ime isti stvari — velja za seznam,
+množico in slovar:
+
+```python
+a = [1, 2]
+b = a
+b.append(3)
+a                   # [1, 2, 3] -- spremenil se je tudi a
+
+b = a[:]            # kopija; enakovredno list(a) ali a.copy()
+```
+
+**Med sprehodom po zbirki je ne spreminjaj** — pri slovarju in množici to sproži
+`RuntimeError: dictionary changed size during iteration`, pri seznamu pa tiho
+preskoči elemente. Sprehodi se po kopiji:
+
+```python
+for k in list(d):
+    if d[k] == 0:
+        del d[k]
+```
+
+**`in` pri nizu pomeni nekaj drugega kot pri seznamu** — pri nizu išče podniz:
+
+```python
+'ab' in 'xaby'      # True   -- podniz
+'ab' in ['a', 'b']  # False  -- element 'ab' v seznamu ni
+```
+
+**Nabori se primerjajo leksikografsko**, po prvem elementu, ob izenačenju po
+drugem in tako naprej. To je najkrajši način za urejanje po več ključih:
+
+```python
+(1, 2) < (1, 3)                          # True
+sorted(osebe, key=lambda o: (o.priimek, o.ime))
+```
+
+**`keys()`, `values()` in `items()` niso seznami, ampak *pogledi*** — kažejo
+trenutno stanje slovarja in se same posodabljajo:
+
+```python
+d = {'a': 1}
+k = d.keys()
+d['b'] = 2
+list(k)             # ['a', 'b'] -- pogled se je posodobil sam
+```
+Če rabiš zamrznjeno stanje, si ga shrani z `list(d.keys())`.
+
+---
+
 ## 13. Razredi
 
 ```python
