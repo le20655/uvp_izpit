@@ -4,7 +4,7 @@
 Del C — koda za prepis. Del D — kaj se na izpitih ponavlja in tvoje ponavljajoče se napake.
 Del E — načrt za zadnja dva dneva.
 
-Poleg tega imej odprt le še svoj dnevnik napak: [`dnevnik_napak.md`](dnevnik_napak.md).
+Poleg tega imej odprt le še svoj dnevnik napak — datoteko, v katero sproti zapisuješ vsako napako in kaj bi bilo prav.
 
 **Kako se ta dokument povezuje z ostalimi v repozitoriju:**
 
@@ -14,7 +14,6 @@ Poleg tega imej odprt le še svoj dnevnik napak: [`dnevnik_napak.md`](dnevnik_na
 | [`uvod_v_programiranje_zapiski.md`](uvod_v_programiranje_zapiski.md) | *Kako deluje Python?* — jezik po temah |
 | [`izpiti.md`](izpiti.md) | *Kako je bila rešena ta konkretna naloga?* — vseh 81 podnalog z razlago |
 | [`vaje_in_naloge.md`](vaje_in_naloge.md) | *Kje dobim še naloge za vajo?* |
-| [`preveri.py`](preveri.py) | orodje, s katerim rešitev preveriš brez oddaje na strežnik |
 
 ---
 
@@ -2495,12 +2494,6 @@ def tvorijo_lestvico(karte):
 8. **Če se zatakne pri 3. podnalogi**, oddaj vsaj različico, ki reši osnovni primer —
    podnaloge se ocenjujejo ločeno.
 
-**Zagon testov lokalno, brez oddaje na strežnik:**
-
-```
-python preveri.py "Stari izpiti/2526_i1/01_znacke.py"
-```
-
 ---
 
 # Del C — Kuharica (samo koda za prepis)
@@ -3160,8 +3153,7 @@ To so **sistemske** napake, ne naključne. Prvi dve sta te stali celo nalogo.
 # Del E — Zadnja dva dneva
 
 Vaje rešuj v Tomu (isto okolje kot na izpitu). Zapiski in Google da, UI ne — tudi pri vaji ne,
-sicer meriš napačno stvar. Vsako napako sproti zapiši v
-[`dnevnik_napak.md`](dnevnik_napak.md).
+sicer meriš napačno stvar. Vsako napako sproti zapiši v svoj dnevnik napak.
 
 ⚠️ **Tvoje lokalne izpitne datoteke že vsebujejo rešitve.** Za vajo na prazno si
 nalogo prenesi s [projekt-tomo.si](https://www.projekt-tomo.si/) ali pa v
@@ -3173,31 +3165,31 @@ namesto reševanja.
 
 | Čas | Kaj |
 |---|---|
-| 0:00–0:15 | Tomo odprt, priročnik odprt, `dnevnik_napak.md` odprt |
+| 0:00–0:15 | Tomo odprt, priročnik odprt, dnevnik napak odprt |
 | 0:15–1:30 | **Razredi.** `Stevec` (25/26 i1, naloga 2) **na prazno, brez gledanja**. Če pade, napiši še enkrat na prazno. Nato *Osebe* (23/24 i3, n. 3) in *Dvigala* (24/25 i2, n. 2) |
 | 1:30–1:45 | odmor |
 | 1:45–2:45 | **Datoteke.** *Potapljanje ladjic* (24/25 i2, n. 3): branje → mreža → izpis. Izpis primerjaj z besedilom znak za znakom |
 | 2:45–3:30 | **Strukture in argmax.** *Prispevki za piknik* (24/25 i2, n. 1). Nato na roko napiši vse tri oblike argmaxa (§A4.4) |
 | 3:30–3:45 | odmor |
 | 3:45–4:40 | **Rekurzija.** *Urejanje z zlivanjem* (23/24 i1, n. 1) in *Razbitje* (25/26 i2, n. 3) — bazni primer je `{()}`, ne `set()` |
-| 4:40–5:00 | dopolni `dnevnik_napak.md`, naredi si kazalo na eno stran |
+| 4:40–5:00 | dopolni dnevnik napak, naredi si kazalo na eno stran |
 
 ## E2. Dan 2 — simulacije (5 h)
 
 | Čas | Kaj |
 |---|---|
-| 0:00–0:10 | preberi samo `dnevnik_napak.md` |
+| 0:00–0:10 | preberi samo svoj dnevnik napak |
 | 0:10–2:10 | **Simulacija 1: 25/26 i1** (Značke / Štetje / Miran). Isti letnik, nerešeno, pokrije vse tri stebre po vrsti. Časovnik, brez gledanja testov |
 | 2:10–2:50 | pregled: za vsako rdečo **najprej ugani, zakaj**, šele nato poglej test. Vsako napako zapiši |
 | 2:50–3:05 | odmor |
 | 3:05–4:35 | **Simulacija 2: 24/25 i1** (Klepet / Katan / Osmerosmerke), 90 min — namenoma pod pritiskom. Doda `random`, privzete argumente in mrežo z 8 smermi |
-| 4:35–5:00 | pregled, dopolni `dnevnik_napak.md`, preberi §A6 in §A7 |
+| 4:35–5:00 | pregled, dopolni dnevnik napak, preberi §A6 in §A7 |
 
 **Zvečer pred izpitom ne rešuj ničesar novega.** Spanje ti tu prinese več kot še ena naloga.
 
 ## E3. Jutro izpita
 
-Preberi samo `dnevnik_napak.md` in §A6 (kontrolni seznam). Nič drugega.
+Preberi samo svoj dnevnik napak in §A6 (kontrolni seznam). Nič drugega.
 
 ## E4. Rezerva
 
