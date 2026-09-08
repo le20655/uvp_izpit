@@ -7,7 +7,7 @@ Zapiski, rešeni izpiti in vaje za predmet **Uvod v programiranje** (Python).
 | Datoteka | Kaj vsebuje |
 |---|---|
 | [`uvod_v_programiranje_zapiski.md`](uvod_v_programiranje_zapiski.md) | Zapiski celotne snovi — od osnovnih tipov do razredov, generatorjev, datotek in regularnih izrazov. Uporabi kot priročnik. |
-| [`izpiti_2324.md`](izpiti_2324.md) | Vsi trije izpitni roki 2023/24, rešeni in razloženi: 9 nalog × 3 podnaloge. Rešitve so **preverjene** z vgrajenimi testi Projekta Tomo. |
+| [`izpiti.md`](izpiti.md) | Vseh devet izpitnih rokov (2023/24, 2024/25, 2025/26), rešenih in razloženih: 27 nalog × 3 podnaloge. Vseh 81 rešitev je **preverjenih** z vgrajenimi testi Projekta Tomo. |
 | [`vaje_in_naloge.md`](vaje_in_naloge.md) | Vaje po temah in vzorčne naloge za utrjevanje (rešitve pregledane, a brez uradnih testov). |
 
 Če se učiš za izpit, je smiseln vrstni red: **zapiski → vaje → izpiti**.

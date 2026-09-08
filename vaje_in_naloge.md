@@ -6,7 +6,7 @@ Dokument je nastal z združitvijo treh prejšnjih datotek tega repozitorija —
 odstranjena edina podvojena naloga (*pravilno gnezdeni oklepaji*, ki je bila
 v dveh datotekah). Izvirne različice so dosegljive v zgodovini repozitorija.
 
-> ⚠️ **Razlika glede na `izpiti_2324.md`:** tam so **pravi izpiti** in rešitve,
+> ⚠️ **Razlika glede na `izpiti.md`:** tam so **pravi izpiti** in rešitve,
 > preverjene z vgrajenimi testi Projekta Tomo. Naloge v tem dokumentu so
 > **vaje in vzorčne naloge**; rešitve so pregledane, niso pa preverjene z
 > uradnimi testi, ker ti zanje ne obstajajo.
@@ -1198,10 +1198,11 @@ def pod(meja):
 
 ## Del C — Večdelne naloge v obliki izpita
 
-*Vir: `Resene_naloge.md`. Naloge s po treh podnalogah, kot na pravem izpitu.
-Prve tri so po vzoru poskusnega izpita 2526 (Sprehodi, GPS, Koda QR) — ko bodo
-ti izpiti rešeni in preverjeni s Tomovimi testi, bodo prešli v `izpiti_2324.md`
-oz. njegovo nadaljevanje.*
+*Vir: `Resene_naloge.md`. Naloge s po tremi podnalogami, kot na pravem izpitu.
+Prve tri (Sprehodi, GPS, Koda QR) so naloge poskusnega izpita 2025/26 — te so
+medtem rešene in preverjene s Tomovimi testi v
+[`izpiti.md`](izpiti.md#poskusni-izpit-202526); tukajšnje različice so
+samostojne rešitve istih nalog in so uporabne za primerjavo pristopov.*
 
 ### 1. Kača na mreži (*Sprehodi*)
 

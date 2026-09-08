@@ -2269,7 +2269,7 @@ def pretvori(niz, baza):
 ## 21. Pasti, ki jih izpit rad preverja
 
 Razdelek zbira napake, ki so dejansko nastale pri reševanju izpitov iz
-[`izpiti_2324.md`](izpiti_2324.md). Vsaka je taka, da program **deluje**, a
+[`izpiti.md`](izpiti.md). Vsaka je taka, da program **deluje**, a
 vrne napačen rezultat — prav zato jih je težko opaziti.
 
 ### Nabor z enim elementom potrebuje vejico
