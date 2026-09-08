@@ -2398,3 +2398,4 @@ besedila — če se ne izideta, si nalogo razumel drugače, kot je mišljena.
 Če rešitev prejšnje podnaloge uporabiš kot izhodišče, jo je treba tudi
 predelati. Sicer testi javijo napako pri podnalogi, za katero si prepričan, da
 je rešena — najdražja vrsta napake na izpitu.
+

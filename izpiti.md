@@ -5508,3 +5508,4 @@ Na dnu vsake izpitne datoteke je razdelek s testi. Splača se ga prebrati
 Kadar se besedilo naloge in testi razhajata, **veljajo testi**. V tem naboru
 izpitov se to zgodi vsaj dvakrat (pravilo za zlogotvorni `r` v 3. roku 2023/24
 in primer v besedilu 3. podnaloge pri Vrhskali).
+

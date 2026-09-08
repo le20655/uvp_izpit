@@ -3195,3 +3195,4 @@ Preberi samo svoj dnevnik napak in §A6 (kontrolni seznam). Nič drugega.
 
 Če kje ostane čas (ne na račun spanja): 24/25 i3 (DNA / imenik / tek), 23/24 i3, 23/24 i2,
 25/26 poskusni.
+

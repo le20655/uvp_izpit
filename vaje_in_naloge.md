@@ -1866,3 +1866,4 @@ class Krozno:
 | 7 Minolovec | matrike, 8 sosedov, preverjanje robov, ponovna uporaba funkcije |
 | 8 Gnezdeni | rekurzija nad strukturo, `isinstance`, `extend` vs `append` |
 | 9 Tok | generatorji (`yield`), iterator (`__iter__`/`__next__`/`StopIteration`) |
+

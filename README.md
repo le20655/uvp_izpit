@@ -34,3 +34,4 @@ do konca.
 - [Python Tutor](https://pythontutor.com/) — izvajanje programa korak za korakom, z vidnimi spremenljivkami in klici. Neprecenljivo pri razumevanju rekurzije.
 - [regex101](https://regex101.com/) — sestavljanje in razlaga regularnih izrazov (izberi različico *Python*).
 - [Dokumentacija standardne knjižnice](https://docs.python.org/3/library/index.html) — kaj vse zna `str`, `list`, `dict`, `re`, `collections`.
+
