@@ -9,6 +9,7 @@ Zapiski, rešeni izpiti in vaje za predmet **Uvod v programiranje** (Python).
 | [`uvod_v_programiranje_zapiski.md`](uvod_v_programiranje_zapiski.md) | Zapiski celotne snovi — od osnovnih tipov do razredov, generatorjev, datotek in regularnih izrazov. Uporabi kot priročnik. |
 | [`izpiti.md`](izpiti.md) | Vseh devet izpitnih rokov (2023/24, 2024/25, 2025/26), rešenih in razloženih: 27 nalog × 3 podnaloge. Vseh 81 rešitev je **preverjenih** z vgrajenimi testi Projekta Tomo. |
 | [`vaje_in_naloge.md`](vaje_in_naloge.md) | Vaje po temah in vzorčne naloge za utrjevanje (rešitve pregledane, a brez uradnih testov). |
+| [`izpiti/`](izpiti/) | Izvorne izpitne datoteke Projekta Tomo z vpisanimi rešitvami — 27 datotek `.py`, urejenih po rokih, skupaj s podatkovnimi datotekami, ki jih naloge berejo. |
 
 Če se učiš za izpit, je smiseln vrstni red: **zapiski → vaje → izpiti**.
 
@@ -34,5 +35,14 @@ Zapiski, rešeni izpiti in vaje za predmet **Uvod v programiranje** (Python).
 
 ## Opombe
 
-- Izpitne datoteke Projekta Tomo (`.py`) v tem repozitoriju **niso** shranjene, ker vsebujejo osebne žetone za oddajo. Hranjene so lokalno, v ta repozitorij pride le rešitev z razlago.
+- **Datoteke v `izpiti/` ne morejo oddajati rešitev.** Iz njih sta odstranjena
+  osebna žetona Projekta Tomo (žeton računa in žetoni posameznih podnalog), ker
+  je repozitorij javen in bi ju lahko kdorkoli uporabil za oddajo v tvojem imenu.
+  Na njihovem mestu sta oznaki `TVOJ_ZETON` in `ZETON_PODNALOGE`.
+- **Kako vseeno oddati.** Datoteko si na novo prenesi s
+  [projekt-tomo.si](https://www.projekt-tomo.si/) (takrat vsebuje tvoje žetone) in
+  vanjo prepiši rešitve iz tega repozitorija. Rešitve so v datotekah med vrsticami
+  z oznakami podnalog `# ====@številka=`.
+- **Vse rešitve so preverjene lokalno**, z vgrajenimi testi iz teh istih datotek,
+  a **še niso bile oddane** na Projekt Tomo.
 - Prejšnje datoteke `vaje.md`, `izpitne_naloge_resene.md` in `Resene_naloge.md` so združene v [`vaje_in_naloge.md`](vaje_in_naloge.md) (brez podvojene naloge o gnezdenih oklepajih). Njihove izvirne različice ostajajo dosegljive v zgodovini repozitorija.
