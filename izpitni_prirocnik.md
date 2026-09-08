@@ -129,13 +129,6 @@ Poleg tega imej odprt le še svoj dnevnik napak — datoteko, v katero sproti za
 - [D4. Dve opozorili o testih](#d4-dve-opozorili-o-testih)
 - [D5. Tvoje ponavljajoče se napake](#d5-tvoje-ponavljajoče-se-napake)
 
-**[Del E — Zadnja dva dneva](#del-e--zadnja-dva-dneva)**
-
-- [E1. Dan 1 — gradniki (5 h)](#e1-dan-1--gradniki-5-h)
-- [E2. Dan 2 — simulacije (5 h)](#e2-dan-2--simulacije-5-h)
-- [E3. Jutro izpita](#e3-jutro-izpita)
-- [E4. Rezerva](#e4-rezerva)
-
 ---
 
 # Del A — Postopek reševanja
