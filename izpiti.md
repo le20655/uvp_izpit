@@ -61,8 +61,10 @@ Vsaka podnaloga ima:
 
 Sorodni dokumenti v tem repozitoriju:
 
+- [`izpitni_prirocnik.md`](izpitni_prirocnik.md) — postopek reševanja in snov po tipih nalog,
 - [`uvod_v_programiranje_zapiski.md`](uvod_v_programiranje_zapiski.md) — teorija in pregled jezika,
-- [`vaje_in_naloge.md`](vaje_in_naloge.md) — dodatne vaje po temah.
+- [`vaje_in_naloge.md`](vaje_in_naloge.md) — dodatne vaje po temah,
+- [`preveri.py`](preveri.py) — preverjanje rešitve brez oddaje na strežnik.
 
 ---
 
@@ -5481,7 +5483,18 @@ Izpitna datoteka ob zagonu rešitve **odda na strežnik Projekta Tomo** in šele
 nato izpiše, katere podnaloge so veljavne. Med učenjem je to povsem v redu
 (število poskusov ni omejeno), je pa dobro vedeti, da se zgodi.
 
-Če hočeš samo lokalno preizkusiti posamezno funkcijo, jo pokliči v konzoli:
+Kadar hočeš preveriti, ne da bi oddal, uporabi orodje
+[`preveri.py`](preveri.py) iz tega repozitorija:
+
+```
+python preveri.py "Stari izpiti/2526_i1/01_znacke.py"   # ena datoteka
+python preveri.py "Stari izpiti/2526_i1"                # cel izpitni rok
+```
+
+Skripta izpitno mapo skopira v začasno mapo, iz kopije odstrani del za
+pošiljanje in požene le teste — izvirnika se ne dotakne.
+
+Posamezno funkcijo lahko preizkusiš tudi kar v konzoli:
 
 ```python
 >>> stevilo_zlogov("Rdečo mašno maš v laseh")

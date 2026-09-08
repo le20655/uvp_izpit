@@ -2272,6 +2272,10 @@ Razdelek zbira napake, ki so dejansko nastale pri reševanju izpitov iz
 [`izpiti.md`](izpiti.md). Vsaka je taka, da program **deluje**, a
 vrne napačen rezultat — prav zato jih je težko opaziti.
 
+> Krajši kontrolni seznam istih pasti, v obliki tabele za hitro branje pred
+> izpitom, je v priročniku:
+> [Dodatek B — pasti, ki stanejo točke](izpitni_prirocnik.md#dodatek-b--pasti-ki-stanejo-točke).
+
 ### Nabor z enim elementom potrebuje vejico
 
 ```python
