@@ -1,7 +1,7 @@
 # Izpitni priročnik — Uvod v programiranje
 
 **Ena sama datoteka za izpit.** Del A — kako se naloge lotiš. Del B — vsa snov po tipih nalog.
-Del C — koda za prepis. Del D — kaj se na izpitih ponavlja in tvoje ponavljajoče se napake.
+Del C - koda za prepis. Del D — kaj se na izpitih ponavlja in tvoje ponavljajoče se napake.
 Del E — načrt za zadnja dva dneva.
 
 Poleg tega imej odprt le še svoj dnevnik napak — datoteko, v katero sproti zapisuješ vsako napako in kaj bi bilo prav.
@@ -102,7 +102,7 @@ Poleg tega imej odprt le še svoj dnevnik napak — datoteko, v katero sproti za
 - [Dodatek B — pasti, ki stanejo točke](#dodatek-b--pasti-ki-stanejo-točke)
 - [Dodatek C — postopek reševanja naloge](#dodatek-c--postopek-reševanja-naloge)
 
-**[Del C — Kuharica (samo koda za prepis)](#del-c--kuharica-samo-koda-za-prepis)**
+**[Del C - koda za prepis](#del-c---koda-za-prepis)**
 
 - [1. Razred: skelet, ki pokrije 90 % nalog](#1-razred-skelet-ki-pokrije-90--nalog)
     - [1a. Razred s slovarjem v atributu; metoda vrne NOV objekt ✅](#1a-razred-s-slovarjem-v-atributu-metoda-vrne-nov-objekt-)
@@ -2496,7 +2496,7 @@ def tvorijo_lestvico(karte):
 
 ---
 
-# Del C — Kuharica (samo koda za prepis)
+# Del C - koda za prepis
 
 Brez razlage, za hitrost. Sklici oblike **§C4** v Delu A pomenijo razdelek 4 tega dela.
 Odseki z ✅ so bili pognani skozi prave teste Projekta Tomo in sprejeti.
