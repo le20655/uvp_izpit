@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<title>PLONK – Uvod v programiranje</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+  :root {
+    --bg: #0d0d0f;
+    --panel: #131318;
+    --border: #2a2a35;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --accent3: #f59e0b;
+    --accent4: #10b981;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #1a1a24;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    line-height: 1.4;
+    padding: 8px;
+  }
+
+  .header {
+    text-align: center;
+    padding: 6px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--accent2);
+  }
+  .header p { color: var(--muted); font-size: 10px; margin-top: 2px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px;
+    break-inside: avoid;
+  }
+
+  .card-wide {
+    grid-column: span 2;
+  }
+  .card-full {
+    grid-column: span 3;
+  }
+
+  .card-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 5px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .t-purple { background: rgba(124,58,237,.25); color: #a78bfa; border-left: 3px solid var(--accent); }
+  .t-cyan   { background: rgba(6,182,212,.2);   color: #67e8f9; border-left: 3px solid var(--accent2); }
+  .t-amber  { background: rgba(245,158,11,.2);  color: #fcd34d; border-left: 3px solid var(--accent3); }
+  .t-green  { background: rgba(16,185,129,.2);  color: #6ee7b7; border-left: 3px solid var(--accent4); }
+  .t-red    { background: rgba(239,68,68,.2);   color: #fca5a5; border-left: 3px solid var(--red); }
+
+  code, pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 5px 6px;
+    overflow-x: auto;
+    line-height: 1.45;
+    white-space: pre;
+  }
+
+  .kw  { color: #c084fc; }
+  .fn  { color: #67e8f9; }
+  .cls { color: #fcd34d; }
+  .str { color: #6ee7b7; }
+  .cm  { color: #4b5563; }
+  .num { color: #fb923c; }
+  .op  { color: #94a3b8; }
+
+  .row { display: flex; gap: 6px; }
+  .col { flex: 1; }
+
+  .tip {
+    background: rgba(245,158,11,.08);
+    border-left: 2px solid var(--accent3);
+    padding: 3px 5px;
+    margin-top: 4px;
+    font-size: 9.5px;
+    color: #fcd34d;
+  }
+
+  .warn {
+    background: rgba(239,68,68,.08);
+    border-left: 2px solid var(--red);
+    padding: 3px 5px;
+    margin-top: 4px;
+    font-size: 9.5px;
+    color: #fca5a5;
+  }
+
+  .where {
+    color: var(--muted);
+    font-size: 8.5px;
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  ul { padding-left: 12px; }
+  li { margin: 1px 0; }
+
+  .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: white;
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+
+  .section-label {
+    grid-column: span 3;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 4px 0 2px;
+    border-bottom: 1px solid var(--border);
+    margin-top: 2px;
+  }
+
+  @media print {
+    body { background: white; color: black; }
+    .card { border: 1px solid #ccc; }
+    pre { background: #f5f5f5; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡ PLONK — UVOD V PROGRAMIRANJE ⚡</h1>
+  <p>Vsi izpiti 2022–2025 · Tipi nalog in vzorčne rešitve · <span style="color:var(--accent3)">Najdi tip → poglej vzorec → adaptiraj</span></p>
+</div>
+
+<div class="grid">
+
+<!-- ========== TIP 1: RAZREDI ========== -->
+<div class="section-label">🏛️ TIP 1: RAZREDI (Classes)</div>
+
+<div class="card card-full">
+  <div class="card-title t-purple">🏛️ RAZREDI — osnovna struktura</div>
+  <div class="where">📍 Pesnik France (1.izpit 2023/24), Oseba (3.izpit 2023/24), Naseljenec (1.izpit 2024/25), Dvigalo (2.izpit 2024/25), Kristal (1.izpit 2022/23), Zabar (2.izpit 2022/23), StiriVVrsto (3.izpit 2022/23), Oseba/Imenik (3.izpit 2024/25)</div>
+  <div class="row" style="margin-top:4px">
+    <div class="col">
+<pre><span class="kw">class</span> <span class="cls">ImeRazreda</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, arg1, arg2, opt=<span class="kw">None</span>):
+        <span class="kw">self</span>.arg1 = arg1
+        <span class="kw">self</span>.arg2 = arg2
+        <span class="cm"># pozor: mutable default!</span>
+        <span class="kw">self</span>.seznam = opt <span class="kw">if</span> opt <span class="kw">is not None else</span> []
+        <span class="kw">self</span>.slovar = {}
+
+    <span class="kw">def</span> <span class="fn">__repr__</span>(<span class="kw">self</span>):
+        <span class="cm"># simulira klic konstruktorja</span>
+        <span class="kw">return</span> <span class="str">f"ImeRazreda({self.arg1!r}, {self.arg2!r})"</span>
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="kw">self</span>):
+        <span class="cm"># človeško berljiv opis</span>
+        <span class="kw">return</span> <span class="str">f"{self.arg1} {self.arg2}"</span>
+
+    <span class="kw">def</span> <span class="fn">__lt__</span>(<span class="kw">self</span>, other):
+        <span class="cm"># za primerjavo / sortiranje</span>
+        <span class="kw">return</span> <span class="kw">self</span>.arg1 &lt; other.arg1
+
+    <span class="kw">def</span> <span class="fn">__getitem__</span>(<span class="kw">self</span>, i):
+        <span class="cm"># za obj[i] dostop</span>
+        <span class="kw">return</span> <span class="kw">self</span>.seznam[i]</pre>
+    </div>
+    <div class="col">
+<pre><span class="cm"># DEDOVANJE (podrazred razširi obstoječ)</span>
+<span class="kw">class</span> <span class="cls">PodRazred</span>(<span class="cls">ImeRazreda</span>):
+    <span class="kw">def</span> <span class="fn">nova_metoda</span>(<span class="kw">self</span>, x):
+        <span class="kw">return</span> x
+
+<span class="cm"># INSTANCE CHECK</span>
+<span class="fn">isinstance</span>(obj, <span class="cls">ImeRazreda</span>)  <span class="cm"># → True/False</span>
+
+<span class="cm"># SORTED z razredom kot ključem</span>
+<span class="fn">sorted</span>(seznam, key=<span class="cls">ImeRazreda</span>)
+
+<span class="cm"># MUTABLE DEFAULT — PAZI!</span>
+<span class="cm"># NAPAČNO:</span>
+<span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, lst=[]):  <span class="cm"># ← bug!</span>
+<span class="cm"># PRAVILNO:</span>
+<span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, lst=<span class="kw">None</span>):
+    <span class="kw">self</span>.lst = lst <span class="kw">if</span> lst <span class="kw">is not None else</span> []
+
+<span class="cm"># TIPIČNI ATRIBUTI:</span>
+<span class="kw">self</span>.ime = ime
+<span class="kw">self</span>.otroci = []
+<span class="kw">self</span>.stars = <span class="kw">None</span>
+<span class="kw">self</span>.dobrine = {}
+<span class="kw">self</span>.na_potezi = <span class="str">'*'</span></pre>
+    </div>
+    <div class="col">
+<pre><span class="cm"># RAZRED Z LOGIKO — Dvigalo primer</span>
+<span class="kw">class</span> <span class="cls">Dvigalo</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, nd=<span class="num">0</span>, post=<span class="kw">None</span>):
+        <span class="kw">self</span>.nadstropje = nd
+        <span class="kw">self</span>.postanki = post <span class="kw">or</span> []
+
+    <span class="kw">def</span> <span class="fn">razdalja</span>(<span class="kw">self</span>, cilj):
+        <span class="kw">if not self</span>.postanki:
+            <span class="kw">return</span> <span class="fn">abs</span>(cilj - <span class="kw">self</span>.nadstropje)
+        r = <span class="fn">abs</span>(<span class="kw">self</span>.nadstropje - <span class="kw">self</span>.postanki[<span class="num">0</span>])
+        <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(<span class="kw">self</span>.postanki)-<span class="num">1</span>):
+            r += <span class="fn">abs</span>(<span class="kw">self</span>.postanki[i]
+                   - <span class="kw">self</span>.postanki[i+<span class="num">1</span>])
+        r += <span class="fn">abs</span>(<span class="kw">self</span>.postanki[-<span class="num">1</span>] - cilj)
+        <span class="kw">return</span> r
+
+<span class="cm"># RAZRED Z get/set na slovarju</span>
+<span class="kw">def</span> <span class="fn">ropa</span>(<span class="kw">self</span>, st, dobrina):
+    curr = <span class="kw">self</span>.rop.<span class="fn">get</span>(st, [])
+    curr.<span class="fn">append</span>(dobrina)
+    <span class="kw">self</span>.rop[st] = curr
+
+<span class="kw">def</span> <span class="fn">usoda</span>(<span class="kw">self</span>, st):
+    d = <span class="kw">self</span>.rop.<span class="fn">get</span>(st, [])
+    <span class="kw">self</span>.dobrine.<span class="fn">extend</span>(d)
+    <span class="kw">return</span> d</pre>
+    </div>
+  </div>
+  <div class="tip">⚡ KLJUČNE BESEDE v navodilu → razred: "definirajte razred", "konstruktor", "metoda", "atribut", "__str__", "__repr__"</div>
+</div>
+
+<!-- ========== TIP 2: DATOTEKE ========== -->
+<div class="section-label">📁 TIP 2: DATOTEKE (File I/O)</div>
+
+<div class="card card-wide">
+  <div class="card-title t-cyan">📁 BRANJE IN PISANJE DATOTEK</div>
+  <div class="where">📍 Avtobusni prevozi (1.izpit 2023/24), Potapljanje ladjic (1.izpit 2024/25), Vročinski valovi (1.izpit 2022/23), Prijave (2.izpit 2022/23), Orientacijski tek (3.izpit 2024/25)</div>
+  <div class="row" style="margin-top:4px">
+    <div class="col">
+<pre><span class="cm"># BRANJE — osnova</span>
+<span class="kw">with</span> <span class="fn">open</span>(dat, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> f:
+    <span class="kw">for</span> vrstica <span class="kw">in</span> f:
+        vrstica = vrstica.<span class="fn">strip</span>()
+        <span class="cm"># ...obdelaj...</span>
+
+<span class="cm"># PRESKOČI GLAVO</span>
+<span class="fn">next</span>(f)  <span class="cm"># ali f.readline()</span>
+
+<span class="cm"># RAZDELI PO VEJICI</span>
+deli = vrstica.<span class="fn">split</span>(<span class="str">','</span>)
+a, b, c = vrstica.<span class="fn">strip</span>().<span class="fn">split</span>(<span class="str">','</span>)
+
+<span class="cm"># BRANJE CELE DATOTEKE</span>
+vsebina = f.<span class="fn">read</span>()
+vrstice = f.<span class="fn">readlines</span>()
+
+<span class="cm"># PISANJE</span>
+<span class="kw">with</span> <span class="fn">open</span>(dat, <span class="str">'w'</span>, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="str">"tekst\n"</span>)
+    <span class="fn">print</span>(tekst, file=f)  <span class="cm"># samodejni \n</span></pre>
+    </div>
+    <div class="col">
+<pre><span class="cm"># NAVODILO IZI: "začne s številko / s črko"</span>
+<span class="kw">if</span> vrstica[<span class="num">0</span>].<span class="fn">isdigit</span>():   <span class="cm"># → linija</span>
+<span class="kw">if</span> vrstica[<span class="num">0</span>].<span class="fn">isalpha</span>():   <span class="cm"># → postaja</span>
+
+<span class="cm"># ZGRADBA SLOVAR iz datoteke (Avtobusi)</span>
+slovar = {}
+trenutna = <span class="kw">None</span>
+<span class="kw">for</span> v <span class="kw">in</span> f:
+    v = v.<span class="fn">strip</span>()
+    <span class="kw">if</span> v[<span class="num">0</span>].<span class="fn">isdigit</span>():
+        trenutna = v
+        slovar[trenutna] = []
+    <span class="kw">else</span>:
+        slovar[trenutna].<span class="fn">append</span>(v)
+
+<span class="cm"># PISANJE S PUŠČICO</span>
+<span class="fn">print</span>(<span class="str">f"{ime}: {' -> '.join(sez)}"</span>, file=f)
+
+<span class="cm"># MANJKAJOČE VREDNOSTI (CSV)</span>
+val = -<span class="num">99.9</span> <span class="kw">if</span> <span class="fn">len</span>(s)==<span class="num">0</span> <span class="kw">else</span> <span class="fn">float</span>(s)</pre>
+    </div>
+  </div>
+  <div class="tip">⚡ NAVODILO → "preberi iz datoteke", "zapiši v datoteko", "vrstice", "CSV", "stolpci"</div>
+</div>
+
+<div class="card">
+  <div class="card-title t-cyan">📁 PISANJE DATOTEK — vzorci</div>
+<pre><span class="cm"># ROB (Potapljanje ladjic)</span>
+f.<span class="fn">write</span>(<span class="str">'/'</span> + <span class="str">'-'</span>*n + <span class="str">'\\\n'</span>)
+<span class="kw">for</span> v <span class="kw">in</span> plosca:
+    f.<span class="fn">write</span>(<span class="str">'|'</span> + <span class="str">''</span>.<span class="fn">join</span>(v) + <span class="str">'|\n'</span>)
+f.<span class="fn">write</span>(<span class="str">'\\'</span> + <span class="str">'-'</span>*n + <span class="str">'/'</span>)
+
+<span class="cm"># RAZPOREJANJE V SKUPINE</span>
+<span class="kw">if</span> skupina:
+    f.<span class="fn">write</span>(<span class="str">"Skupina:\n"</span>)
+    <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">sorted</span>(skupina):
+        f.<span class="fn">write</span>(<span class="str">f"- {x}\n"</span>)
+    f.<span class="fn">write</span>(<span class="str">"\n"</span>)  <span class="cm"># prazna vrstica med skupinami</span>
+
+<span class="cm"># PRESTEJ VRSTICE (ignorira # in prazne)</span>
+<span class="kw">def</span> <span class="fn">prestej_vrstice</span>(dat):
+    u = <span class="num">0</span>
+    <span class="kw">with</span> <span class="fn">open</span>(dat, encoding=<span class="str">'utf-8'</span>) <span class="kw">as</span> f:
+        <span class="kw">for</span> v <span class="kw">in</span> f:
+            v = v.<span class="fn">strip</span>()
+            <span class="kw">if</span> v <span class="kw">and</span> v[<span class="num">0</span>] != <span class="str">'#'</span>: u += <span class="num">1</span>
+    <span class="kw">return</span> u</pre>
+</div>
+
+<!-- ========== TIP 3: REKURZIJA ========== -->
+<div class="section-label">🔁 TIP 3: REKURZIJA & SIMULACIJA</div>
+
+<div class="card">
+  <div class="card-title t-amber">🔁 REKURZIJA</div>
+  <div class="where">📍 Urejanje z zlivanjem (1.izpit 2023/24), Žabe/poti (1.izpit 2022/23), Gnezdenje (3.izpit 2023/24), Geslo v mapah (3.izpit 2022/23)</div>
+<pre><span class="cm"># OSNOVA REKURZIJE:</span>
+<span class="cm"># 1. bazni primer (ko se ustavi)</span>
+<span class="cm"># 2. rekurzivni klic (manjši problem)</span>
+
+<span class="cm"># UREJANJE Z ZLIVANJEM</span>
+<span class="kw">def</span> <span class="fn">uredi</span>(s):
+    <span class="kw">if</span> <span class="fn">len</span>(s) &lt;= <span class="num">1</span>: <span class="kw">return</span> s  <span class="cm"># baza!</span>
+    pol = <span class="fn">len</span>(s) // <span class="num">2</span>
+    <span class="kw">return</span> <span class="fn">zlij</span>(<span class="fn">uredi</span>(s[:pol]), <span class="fn">uredi</span>(s[pol:]))
+
+<span class="cm"># ŠTETJE VARNIH POTI (grid, le ↓ in →)</span>
+<span class="kw">def</span> <span class="fn">prestej_varne_poti</span>(z, i, j):
+    <span class="kw">if not</span> z[i][j]: <span class="kw">return</span> <span class="num">0</span>
+    <span class="kw">if</span> i==<span class="num">0</span> <span class="kw">and</span> j==<span class="num">0</span>: <span class="kw">return</span> <span class="num">1</span>
+    poti = <span class="num">0</span>
+    <span class="kw">if</span> i > <span class="num">0</span>: poti += <span class="fn">prestej_varne_poti</span>(z,i-<span class="num">1</span>,j)
+    <span class="kw">if</span> j > <span class="num">0</span>: poti += <span class="fn">prestej_varne_poti</span>(z,i,j-<span class="num">1</span>)
+    <span class="kw">return</span> poti
+
+<span class="cm"># ISKANJE V GNEZDENEM SLOVARJU</span>
+<span class="kw">def</span> <span class="fn">najdi_geslo</span>(r):
+    <span class="kw">if</span> <span class="str">'geslo.txt'</span> <span class="kw">in</span> r: <span class="kw">return</span> <span class="str">'geslo.txt'</span>
+    <span class="kw">for</span> m, vseb <span class="kw">in</span> r.<span class="fn">items</span>():
+        <span class="kw">if</span> vseb <span class="kw">is not None</span>:
+            p = <span class="fn">najdi_geslo</span>(vseb)
+            <span class="kw">if</span> p: <span class="kw">return</span> <span class="str">f"{m}/{p}"</span>
+    <span class="kw">return None</span></pre>
+  <div class="tip">⚡ NAMIG v navodilu: "rekurzivno", "namig: rekurzija", ali "razdeli na pol"</div>
+</div>
+
+<div class="card">
+  <div class="card-title t-amber">🎲 SIMULACIJA / IZŠTEVANKE</div>
+  <div class="where">📍 Izštevanke (2.izpit 2023/24), Katan (1.izpit 2024/25), Žive žabe (1.izpit 2022/23)</div>
+<pre><span class="cm"># IZŠTEVANKE — indeks v krogu</span>
+<span class="kw">def</span> <span class="fn">izlocen</span>(sez, ime, st):
+    x = sez.<span class="fn">index</span>(ime)
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(st - <span class="num">1</span>):
+        x = (x + <span class="num">1</span>) % <span class="fn">len</span>(sez)
+    <span class="kw">return</span> sez[x]
+
+<span class="cm"># ZMAGOVALEC + KOPIJA seznama</span>
+<span class="kw">def</span> <span class="fn">pri_kom_zaceti</span>(igr, fav, dol):
+    <span class="kw">for</span> zac <span class="kw">in</span> igr:
+        <span class="kw">if</span> <span class="fn">zmagovalec</span>(igr.<span class="fn">copy</span>(), zac, dol)==fav:
+            <span class="kw">return</span> zac
+
+<span class="cm"># POPULACIJSKA DINAMIKA (Lotka-Volterra)</span>
+<span class="kw">def</span> <span class="fn">cez_nekaj_let</span>(alfe, z, p, leta):
+    a1,a2,a3,a4 = alfe
+    <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(leta):
+        zn = z + a1*z - a2*z*p
+        pn = p + a3*p + a4*z*p
+        z, p = <span class="fn">max</span>(zn,<span class="num">0</span>), <span class="fn">max</span>(pn,<span class="num">0</span>)
+    <span class="kw">return</span> z, p
+
+<span class="cm"># GOSTIŠČE — štej porcije</span>
+<span class="kw">while True</span>:
+    <span class="kw">if</span> g >= p: g-=p; porc+=<span class="num">1</span>; lok+=<span class="num">1</span>
+    <span class="kw">elif</span> lok >= l: lok-=l; porc+=<span class="num">1</span>; lok+=<span class="num">1</span>
+    <span class="kw">else</span>: <span class="kw">break</span></pre>
+</div>
+
+<div class="card">
+  <div class="card-title t-amber">🔍 ISKANJE V MREŽI (grid)</div>
+  <div class="where">📍 Osmerosmerke (1.izpit 2024/25)</div>
+<pre><span class="cm"># 8 SMERI</span>
+smeri = [(-<span class="num">1</span>,-<span class="num">1</span>),(-<span class="num">1</span>,<span class="num">0</span>),(-<span class="num">1</span>,<span class="num">1</span>),
+         (<span class="num">0</span>,-<span class="num">1</span>),          (<span class="num">0</span>,<span class="num">1</span>),
+         (<span class="num">1</span>,-<span class="num">1</span>), (<span class="num">1</span>,<span class="num">0</span>), (<span class="num">1</span>,<span class="num">1</span>)]
+
+<span class="cm"># PREVERI BESEDO v smeri</span>
+<span class="kw">def</span> <span class="fn">preveri</span>(mreza, beseda, zac, smer):
+    i, j = zac; di, dj = smer
+    <span class="kw">for</span> crka <span class="kw">in</span> beseda:
+        <span class="kw">if</span> (i&lt;<span class="num">0</span> <span class="kw">or</span> j&lt;<span class="num">0</span> <span class="kw">or</span>
+            i>=<span class="fn">len</span>(mreza) <span class="kw">or</span> j>=<span class="fn">len</span>(mreza[<span class="num">0</span>])
+            <span class="kw">or</span> crka!=mreza[i][j]):
+            <span class="kw">return False</span>
+        i+=di; j+=dj
+    <span class="kw">return True</span>
+
+<span class="cm"># ISKANJE — preizkusi vse start+smer</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(mreza)):
+  <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">len</span>(mreza[<span class="num">0</span>])):
+    <span class="kw">for</span> di <span class="kw">in</span> (-<span class="num">1</span>,<span class="num">0</span>,<span class="num">1</span>):
+      <span class="kw">for</span> dj <span class="kw">in</span> (-<span class="num">1</span>,<span class="num">0</span>,<span class="num">1</span>):
+        <span class="kw">if</span> di==<span class="num">0</span> <span class="kw">and</span> dj==<span class="num">0</span>: <span class="kw">continue</span>
+        <span class="kw">if</span> <span class="fn">preveri</span>(mreza,b,(i,j),(di,dj)):
+            <span class="kw">return</span> (i,j),(di,dj)</pre>
+</div>
+
+<!-- ========== TIP 4: NIZI & REGEX ========== -->
+<div class="section-label">📝 TIP 4: NIZI, REGEX & SLOVARJI</div>
+
+<div class="card">
+  <div class="card-title t-green">📝 NIZI — obdelava</div>
+  <div class="where">📍 France (vsi izpiti), Kodiranje base64, DNA analiza, Premetanke</div>
+<pre><span class="cm"># OSNOVE</span>
+niz.<span class="fn">strip</span>()         <span class="cm"># odstrani \n, presledke</span>
+niz.<span class="fn">split</span>(<span class="str">','</span>)       <span class="cm"># razdeli po ločilu</span>
+niz.<span class="fn">startswith</span>(x)   <span class="cm"># začne z x</span>
+niz[<span class="num">0</span>].<span class="fn">isdigit</span>()    <span class="cm"># je številka?</span>
+niz[<span class="num">0</span>].<span class="fn">isalpha</span>()    <span class="cm"># je črka?</span>
+<span class="str">''</span>.<span class="fn">join</span>(sez)         <span class="cm"># seznam → niz</span>
+<span class="str">' -> '</span>.<span class="fn">join</span>(sez)     <span class="cm"># z ločilom</span>
+
+<span class="cm"># REZINE</span>
+s[::k]   <span class="cm"># vsak k-ti element</span>
+s[i:i+<span class="num">3</span>] <span class="cm"># 3 znaki od i</span>
+
+<span class="cm"># ZAMENJAVA PRINT→RETURN (France)</span>
+v = v[:-<span class="num">1</span>].<span class="fn">replace</span>(<span class="str">"print("</span>, <span class="str">"return "</span>)
+
+<span class="cm"># SORTIRANJE LEKSIKOGRAFSKO s custom key</span>
+abeceda = {<span class="str">'a'</span>:<span class="num">1</span>,<span class="str">'b'</span>:<span class="num">2</span>,<span class="str">'č'</span>:<span class="num">4</span>, ...}
+<span class="kw">def</span> <span class="fn">__lt__</span>(<span class="kw">self</span>, other):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="fn">min</span>(<span class="fn">len</span>(<span class="kw">self</span>.b),<span class="fn">len</span>(other.b))):
+        <span class="kw">if</span> ab[<span class="kw">self</span>.b[i]] &lt; ab[other.b[i]]:
+            <span class="kw">return True</span>
+        <span class="kw">elif</span> ab[<span class="kw">self</span>.b[i]] > ab[other.b[i]]:
+            <span class="kw">return False</span>
+    <span class="kw">return</span> <span class="fn">len</span>(<span class="kw">self</span>.b) &lt; <span class="fn">len</span>(other.b)</pre>
+</div>
+
+<div class="card">
+  <div class="card-title t-green">🔤 REGEX — vzorci</div>
+  <div class="where">📍 France popravki (2.izpit 2023/24), Čustveni znaki, France zlogi</div>
+<pre><span class="kw">import</span> re
+
+<span class="cm"># NAJDI VSE</span>
+re.<span class="fn">findall</span>(r<span class="str">'\d+'</span>, niz)       <span class="cm"># vsa števila</span>
+re.<span class="fn">findall</span>(r<span class="str">':[a-z]+:'</span>, niz)  <span class="cm"># :custvencek:</span>
+re.<span class="fn">findall</span>(r<span class="str">'\b\w{2,}\b'</span>, n)  <span class="cm"># besede 2+ znakov</span>
+
+<span class="cm"># ZAMENJAJ</span>
+re.<span class="fn">sub</span>(r<span class="str">'\d+'</span>, <span class="str">'nekaj'</span>, niz)  <span class="cm"># prim. recept</span>
+
+<span class="cm"># POENOSTAVITEV (x = x + n  →  x += n)</span>
+<span class="cm"># Vzorec: ime = ime op vrednost</span>
+deli = vrstica.<span class="fn">split</span>()
+<span class="kw">if</span> <span class="fn">len</span>(deli)==<span class="num">5</span> <span class="kw">and</span> deli[<span class="num">1</span>]==<span class="str">'='</span>:
+    ime = deli[<span class="num">0</span>]
+    <span class="kw">if</span> deli[<span class="num">2</span>]==ime:  <span class="cm"># ime je levo</span>
+        <span class="kw">return</span> zamik+ime+<span class="str">" "</span>+deli[<span class="num">3</span>]+<span class="str">"= "</span>+deli[<span class="num">4</span>]
+
+<span class="cm"># SAMOGLASNIKI + R ki ni ob soglasniku</span>
+sam = <span class="fn">len</span>(re.<span class="fn">findall</span>(r<span class="str">'[aeiou]'</span>, b, re.I))
+rji = <span class="fn">len</span>(re.<span class="fn">findall</span>(
+    r<span class="str">'([^aeiou]|^)r([^aeiou]|$)'</span>, b, re.I))
+
+<span class="cm"># MNOŽICA iz findall</span>
+mnozica.<span class="fn">update</span>(re.<span class="fn">findall</span>(vzorec, niz))</pre>
+</div>
+
+<div class="card">
+  <div class="card-title t-green">📚 SLOVARJI — vzorci</div>
+  <div class="where">📍 Piknik (2.izpit 2024/25), Pogosti znaki (3.izpit 2023/24), Prijave na izpit (2.izpit 2022/23)</div>
+<pre><span class="cm"># ŠTETJE POJAVITEV</span>
+slovar = {}
+<span class="kw">for</span> x <span class="kw">in</span> niz:
+    slovar[x] = slovar.<span class="fn">get</span>(x, <span class="num">0</span>) + <span class="num">1</span>
+
+<span class="cm"># ZBIRANJE VREDNOSTI (piknik)</span>
+zbir = {}
+<span class="kw">for</span> pod <span class="kw">in</span> prispevki.<span class="fn">values</span>():
+    <span class="kw">for</span> hrana, kol <span class="kw">in</span> pod.<span class="fn">items</span>():
+        zbir[hrana] = zbir.<span class="fn">get</span>(hrana,<span class="num">0</span>) + kol
+
+<span class="cm"># SORTIRANJE SLOVARJA po vrednosti</span>
+pari = <span class="fn">list</span>(slovar.<span class="fn">items</span>())
+pari.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: (-x[<span class="num">1</span>], x[<span class="num">0</span>]))
+
+<span class="cm"># OBRNJEN SLOVAR</span>
+inv = {v: k <span class="kw">for</span> k, v <span class="kw">in</span> slovar.<span class="fn">items</span>()}
+
+<span class="cm"># MNOŽICA ključev za iskanje</span>
+<span class="kw">if</span> key <span class="kw">not in</span> slovar.<span class="fn">keys</span>():
+    <span class="cm"># ali krajše:</span>
+<span class="kw">if</span> key <span class="kw">not in</span> slovar:
+
+<span class="cm"># GNEZDENJE (nested sorting)</span>
+gnezdo = (znaki[<span class="num">0</span>],)
+<span class="kw">for</span> z <span class="kw">in</span> znaki[<span class="num">1</span>:]:
+    gnezdo = (z, gnezdo)</pre>
+</div>
+
+<!-- ========== TIP 5: DREVESA / GRAFI ========== -->
+<div class="section-label">🌳 TIP 5: DREVESA & GRAFOVSKE STRUKTURE</div>
+
+<div class="card card-wide">
+  <div class="card-title t-red">🌳 DREVESA (objekti, ki kažejo drug na drugega)</div>
+  <div class="where">📍 Žabarji (2.izpit 2022/23), Oseba (3.izpit 2023/24 - s stars/otroci)</div>
+  <div class="row" style="margin-top:4px">
+    <div class="col">
+<pre><span class="cm"># DREVO — osnovna struktura</span>
+<span class="kw">class</span> <span class="cls">Zabar</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, ime, spol):
+        <span class="kw">self</span>.ime = ime
+        <span class="kw">self</span>.spol = spol
+        <span class="kw">self</span>.stars = <span class="kw">None</span>   <span class="cm"># kazalec gor</span>
+        <span class="kw">self</span>.otroci = []    <span class="cm"># seznam dol</span>
+
+    <span class="kw">def</span> <span class="fn">rojstvo</span>(<span class="kw">self</span>, ime, spol):
+        o = <span class="cls">Zabar</span>(ime, spol)
+        o.stars = <span class="kw">self</span>     <span class="cm"># starš → otrok</span>
+        <span class="kw">self</span>.otroci.<span class="fn">append</span>(o)
+        <span class="kw">return</span> o
+
+<span class="cm"># SORODSTVENO RAZMERJE</span>
+<span class="kw">def</span> <span class="fn">sorodstveno_razmerje</span>(z1, z2):
+    <span class="kw">if</span> z2.stars <span class="kw">is</span> z1:   <span class="cm"># z1 je starš z2</span>
+        <span class="kw">return</span> <span class="str">"oče"</span> <span class="kw">if</span> z1.spol==<span class="str">"M"</span> <span class="kw">else</span> <span class="str">"mati"</span>
+    <span class="kw">if</span> (z1.stars <span class="kw">is not None</span> <span class="kw">and</span>
+        z1.stars <span class="kw">is</span> z2.stars):  <span class="cm"># ista starša</span>
+        <span class="kw">return</span> <span class="str">"brat"</span> <span class="kw">if</span> z1.spol==<span class="str">"M"</span> <span class="kw">else</span> <span class="str">"sestra"</span>
+    <span class="kw">return</span> <span class="str">"drugo"</span></pre>
+    </div>
+    <div class="col">
+<pre><span class="cm"># SKUPNI PREDNIK — hodi gor po drevesu</span>
+<span class="kw">def</span> <span class="fn">zadnji_skupni_prednik</span>(z1, z2):
+    pr1, pr2 = [], []
+    <span class="kw">while</span> z1: pr1.<span class="fn">append</span>(z1); z1=z1.stars
+    <span class="kw">while</span> z2: pr2.<span class="fn">append</span>(z2); z2=z2.stars
+    <span class="kw">for</span> p <span class="kw">in</span> pr1:
+        <span class="kw">if</span> p <span class="kw">in</span> pr2: <span class="kw">return</span> p.ime
+
+<span class="cm"># GENERACIJA — štej korake do vrha</span>
+<span class="kw">def</span> <span class="fn">katera_generacija</span>(z):
+    gen = <span class="num">1</span>
+    <span class="kw">while</span> z.stars <span class="kw">is not None</span>:
+        gen += <span class="num">1</span>; z = z.stars
+    <span class="kw">return</span> gen
+
+<span class="cm"># REZERVACIJE (Kristal)</span>
+<span class="kw">def</span> <span class="fn">dodaj_rezervacijo</span>(<span class="kw">self</span>, traj, zac=<span class="num">0</span>):
+    kand = zac
+    <span class="kw">for</span> oz, ok <span class="kw">in</span> <span class="kw">self</span>.rezervacije:
+        <span class="kw">if</span> kand + traj &lt;= oz: <span class="kw">break</span>
+        <span class="kw">if</span> kand &lt; ok: kand = ok
+    nova = (kand, kand+traj)
+    i = <span class="num">0</span>
+    <span class="kw">while</span> i&lt;<span class="fn">len</span>(<span class="kw">self</span>.rez) <span class="kw">and</span> <span class="kw">self</span>.rez[i][<span class="num">0</span>]&lt;nova[<span class="num">0</span>]:
+        i+=<span class="num">1</span>
+    <span class="kw">self</span>.rez.<span class="fn">insert</span>(i, nova)
+    <span class="kw">return</span> nova</pre>
+    </div>
+  </div>
+  <div class="tip">⚡ NAVODILO → "starš", "otrok", "predniki", "generacija", atributa "stars" in "otroci" navajata na drevo</div>
+</div>
+
+<div class="card">
+  <div class="card-title t-red">🕸️ GRAFI (dostopnost, povezave)</div>
+  <div class="where">📍 Avtobusni prevozi 3.podnaloga, Orientacijski tek</div>
+<pre><span class="cm"># OBSTAJA POVEZAVA z 1 prestopom</span>
+<span class="kw">def</span> <span class="fn">obstaja_povezava</span>(slovar, zac, kon):
+    vse = []
+    <span class="kw">for</span> p <span class="kw">in</span> slovar.<span class="fn">values</span>(): vse += p
+    <span class="kw">if</span> zac <span class="kw">not in</span> vse <span class="kw">or</span> kon <span class="kw">not in</span> vse:
+        <span class="kw">return None</span>
+    <span class="kw">for</span> p1 <span class="kw">in</span> slovar.<span class="fn">values</span>():
+        <span class="kw">if</span> zac <span class="kw">in</span> p1:
+          <span class="kw">for</span> prestop <span class="kw">in</span> p1:
+            <span class="kw">for</span> p2 <span class="kw">in</span> slovar.<span class="fn">values</span>():
+              <span class="kw">if</span> prestop <span class="kw">in</span> p2 <span class="kw">and</span> kon <span class="kw">in</span> p2:
+                <span class="kw">return True</span>
+    <span class="kw">return False</span>
+
+<span class="cm"># VELJAVNOST TEKA (proga = seznam točk)</span>
+<span class="kw">def</span> <span class="fn">je_veljaven</span>(tek, proga):
+    <span class="kw">if</span> tek[<span class="num">0</span>][<span class="num">0</span>]!=<span class="str">"START"</span> <span class="kw">or</span> tek[-<span class="num">1</span>][<span class="num">0</span>]!=<span class="str">"CILJ"</span>:
+        <span class="kw">return False</span>
+    i = <span class="num">0</span>
+    t_na_progi = <span class="fn">set</span>(proga)
+    <span class="kw">for</span> tocka, _ <span class="kw">in</span> tek:
+        <span class="kw">if</span> tocka == proga[i]: i += <span class="num">1</span>
+        <span class="kw">elif</span> tocka <span class="kw">in</span> t_na_progi: <span class="kw">return False</span>
+    <span class="kw">return</span> i == <span class="fn">len</span>(proga)</pre>
+</div>
+
+<!-- ========== TIP 6: ŠTIRI V VRSTO / IGRE ========== -->
+<div class="section-label">🎮 TIP 6: IGRE NA TABELI</div>
+
+<div class="card card-wide">
+  <div class="card-title t-purple">🎮 ŠTIRI V VRSTO — vzorec igre na tabeli</div>
+  <div class="where">📍 Štiri v vrsto (3.izpit 2022/23)</div>
+  <div class="row" style="margin-top:4px">
+    <div class="col">
+<pre><span class="cm"># INICIALIZACIJA TABELE</span>
+polje = [[<span class="str">'.'</span> <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(s)]
+          <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(v)]
+
+<span class="cm"># POTEZA — padanje žetona</span>
+<span class="kw">def</span> <span class="fn">poteza</span>(<span class="kw">self</span>, s):
+    <span class="kw">if</span> (s &lt; <span class="num">0</span> <span class="kw">or</span> s >= <span class="kw">self</span>.<span class="fn">sirina</span>() <span class="kw">or</span>
+        <span class="kw">self</span>.polje[<span class="num">0</span>][s] != <span class="str">'.'</span>):
+        <span class="kw">return False</span>
+    v = <span class="num">0</span>
+    <span class="kw">while</span> v&lt;<span class="kw">self</span>.<span class="fn">visina</span>() <span class="kw">and</span> <span class="kw">self</span>.polje[v][s]==<span class="str">'.'</span>:
+        v += <span class="num">1</span>
+    <span class="kw">self</span>.polje[v-<span class="num">1</span>][s] = <span class="kw">self</span>.na_potezi
+    <span class="cm"># zamenjaj igralca</span>
+    <span class="kw">self</span>.na_potezi = (<span class="str">'o'</span> <span class="kw">if</span> <span class="kw">self</span>.na_potezi==<span class="str">'*'</span>
+                      <span class="kw">else</span> <span class="str">'*'</span>)
+    <span class="kw">return True</span></pre>
+    </div>
+    <div class="col">
+<pre><span class="cm"># PREVERI STIRICO v smeri (di, dj)</span>
+<span class="kw">def</span> <span class="fn">preveri_stirico</span>(<span class="kw">self</span>, v, s, dv, ds):
+    <span class="kw">if</span> (<span class="kw">self</span>.polje[v][s] == <span class="str">'.'</span> <span class="kw">or</span>
+        v+<span class="num">3</span>*dv >= <span class="kw">self</span>.<span class="fn">visina</span>() <span class="kw">or</span>
+        s+<span class="num">3</span>*ds >= <span class="kw">self</span>.<span class="fn">sirina</span>()): <span class="kw">return None</span>
+    <span class="kw">for</span> i <span class="kw">in</span> (<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>):
+        <span class="kw">if</span> <span class="kw">self</span>.polje[v+i*dv][s+i*ds] != <span class="kw">self</span>.polje[v][s]:
+            <span class="kw">return None</span>
+    <span class="kw">return</span> <span class="kw">self</span>.polje[v][s]
+
+<span class="cm"># ZMAGOVALEC — preizkusi vse 4 smeri</span>
+<span class="kw">def</span> <span class="fn">zmagovalec</span>(<span class="kw">self</span>):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="kw">self</span>.<span class="fn">visina</span>()):
+      <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="kw">self</span>.<span class="fn">sirina</span>()):
+        <span class="kw">for</span> d <span class="kw">in</span> ((<span class="num">1</span>,<span class="num">0</span>),(<span class="num">0</span>,<span class="num">1</span>),(<span class="num">1</span>,<span class="num">1</span>),(-<span class="num">1</span>,<span class="num">1</span>)):
+          p = <span class="kw">self</span>.<span class="fn">preveri_stirico</span>(i,j,*d)
+          <span class="kw">if</span> p: <span class="kw">return</span> p
+    <span class="kw">return None</span></pre>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-title t-purple">🔢 KORISTNI VZORCI</div>
+<pre><span class="cm"># MIN Z INDEKSOM (Dvigalo klic)</span>
+sez = [d.<span class="fn">razdalja</span>(nd) <span class="kw">for</span> d <span class="kw">in</span> dvigala]
+<span class="kw">return</span> sez.<span class="fn">index</span>(<span class="fn">min</span>(sez))
+
+<span class="cm"># ENUMERATE + filter</span>
+<span class="kw">for</span> i, (tocka, cas) <span class="kw">in</span> <span class="fn">enumerate</span>(tek):
+    cas_delta = cas - tek[i-<span class="num">1</span>][<span class="num">1</span>] <span class="kw">if</span> i><span class="num">0</span> <span class="kw">else</span> <span class="num">0</span>
+
+<span class="cm"># ZLIJ dva urejena seznama</span>
+<span class="kw">def</span> <span class="fn">zlij</span>(a, b):
+    r = []
+    <span class="kw">while</span> a <span class="kw">and</span> b:
+        <span class="kw">if</span> a[<span class="num">0</span>] &lt;= b[<span class="num">0</span>]: r.<span class="fn">append</span>(a.<span class="fn">pop</span>(<span class="num">0</span>))
+        <span class="kw">else</span>: r.<span class="fn">append</span>(b.<span class="fn">pop</span>(<span class="num">0</span>))
+    <span class="kw">return</span> r + a + b
+
+<span class="cm"># CIKLIČNI INDEKS (krog)</span>
+x = (x + <span class="num">1</span>) % <span class="fn">len</span>(sez)
+
+<span class="cm"># GNEZDENA TABELA</span>
+mat = [[<span class="str">' '</span>]*s <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(v)]
+mat[i][j] = <span class="str">'#'</span>  <span class="cm"># pazi: ne mat[i] = [...]!</span></pre>
+</div>
+
+<!-- ========== QUICK REF ========== -->
+<div class="section-label">⚡ QUICK REFERENCE — Python sintaksa za izpit</div>
+
+<div class="card">
+  <div class="card-title t-cyan">⚡ VGRAJENE FUNKCIJE</div>
+<pre>sorted(sez, key=fn, reverse=True)
+min/max(sez, key=fn)
+enumerate(sez)       <span class="cm"># (i, el)</span>
+zip(a, b)            <span class="cm"># pari</span>
+isinstance(obj, Cls) <span class="cm"># preveri tip</span>
+abs(x)
+round(x, 1)
+float(s) / int(s)
+set(sez)             <span class="cm"># množica</span>
+dict.get(k, default)
+dict.items() / .keys() / .values()
+list.pop(i)          <span class="cm"># odstrani+vrni</span>
+list.insert(i, x)    <span class="cm"># vstavi na mesto</span>
+list.index(x)        <span class="cm"># prvi pojav</span>
+list.copy()          <span class="cm"># plitka kopija!</span>
+list.extend(other)   <span class="cm"># dodaj vse elemente</span>
+list.count(x)        <span class="cm"># koliko x v listi</span>
+str.join(sez)
+str.strip() / lstrip() / rstrip()
+str.split(sep)
+str.replace(a, b)
+str.find(sub)        <span class="cm"># -1 če ni</span>
+str.count(sub)
+str.isdigit() / isalpha() / islower()</pre>
+</div>
+
+<div class="card">
+  <div class="card-title t-cyan">⚡ COMPREHENSIONS & LAMBDA</div>
+<pre><span class="cm"># LIST COMPREHENSION</span>
+[x**<span class="num">2</span> <span class="kw">for</span> x <span class="kw">in</span> sez <span class="kw">if</span> x > <span class="num">0</span>]
+
+<span class="cm"># DICT COMPREHENSION</span>
+{k: v <span class="kw">for</span> k, v <span class="kw">in</span> slovar.<span class="fn">items</span>() <span class="kw">if</span> v > <span class="num">0</span>}
+
+<span class="cm"># SET COMPREHENSION</span>
+{x <span class="kw">for</span> x <span class="kw">in</span> sez}
+
+<span class="cm"># LAMBDA za sortiranje</span>
+pari.<span class="fn">sort</span>(key=<span class="kw">lambda</span> x: (-x[<span class="num">1</span>], x[<span class="num">0</span>]))
+
+<span class="cm"># FILTER</span>
+[z <span class="kw">for</span> i, z <span class="kw">in</span> <span class="fn">enumerate</span>(s) <span class="kw">if</span> i%k == <span class="num">0</span>]
+
+<span class="cm"># VZOREC: pogostost znakov</span>
+<span class="kw">from</span> collections <span class="kw">import</span> Counter
+Counter(niz)  <span class="cm"># ali ročno z dict.get</span>
+
+<span class="cm"># F-STRING triki</span>
+<span class="str">f"{obj!r}"</span>    <span class="cm"># repr(obj)</span>
+<span class="str">f"{x:.1f}"</span>   <span class="cm"># 1 decimalno mesto</span>
+<span class="str">f"{'—'*n}"</span>   <span class="cm"># ponavljanje</span></pre>
+</div>
+
+<div class="card">
+  <div class="card-title t-amber">🎯 KAKO PREPOZNATI TIP NALOGE</div>
+<pre><span class="cm">KLJUČNE BESEDE → TIP</span>
+
+<span class="str">"razred"/"konstruktor"/"metoda"</span>
+  → Razred: __init__, __str__, __repr__
+
+<span class="str">"datoteka"/"beri"/"zapiši"/"CSV"</span>
+  → File I/O: with open(...) as f
+
+<span class="str">"rekurzivno"/"razpolovi"/"podproblem"</span>
+  → Rekurzija: bazni primer + klic
+
+<span class="str">"simuliraj"/"krog"/"izštevanke"</span>
+  → Simulacija z while/for zanko
+
+<span class="str">"mreža"/"smer"/"koordinate"/"polje"</span>
+  → Grid: 2D tabela + (di, dj) smeri
+
+<span class="str">"starš"/"otrok"/"prednik"/"drevo"</span>
+  → Drevesna struktura s kazalci
+
+<span class="str">"anagram"/"premetanka"/"niz"</span>
+  → sorted() primerjava
+
+<span class="str">"slovar"/"pogostost"/"zberi"</span>
+  → dict.get(k, 0) + 1
+
+<span class="str">"regex"/"vzorec"/"zamenjaj"</span>
+  → import re; re.findall/re.sub
+
+<span class="str">"tabela"/"žeton"/"zmaga"/"4v vrsto"</span>
+  → Igra: 2D tabela + smerni vektorji</pre>
+</div>
+
+</div><!-- end grid -->
+
+<div style="text-align:center;margin-top:6px;color:var(--muted);font-size:9px">
+  Era ⚡ Uvod v programiranje · Vse rešitve so delovne (iz tvoje datoteke) · Sreča na izpitu!
+</div>
+
+</body>
+</html>
