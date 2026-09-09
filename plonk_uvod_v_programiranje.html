@@ -161,10 +161,21 @@
     margin-top: 2px;
   }
 
+  .noprint {
+    background: rgba(239,68,68,.12);
+    border: 1px solid var(--red);
+    border-radius: 3px;
+    padding: 4px 6px;
+    margin-bottom: 8px;
+    font-size: 10px;
+    color: #fca5a5;
+  }
+
   @media print {
     body { background: white; color: black; }
     .card { border: 1px solid #ccc; }
     pre { background: #f5f5f5; }
+    .noprint { display: none; }
   }
 </style>
 </head>
@@ -174,6 +185,8 @@
   <h1>⚡ PLONK — UVOD V PROGRAMIRANJE ⚡</h1>
   <p>Vsi izpiti 2022–2025 · Tipi nalog in vzorčne rešitve · <span style="color:var(--accent3)">Najdi tip → poglej vzorec → adaptiraj</span></p>
 </div>
+
+<div class="noprint">⚠️ <b>Pred tiskanjem preberi.</b> Barve sintakse so izbrane za temno ozadje; <code>@media print</code> pobeli le podlago, barv besedila pa ne. Nizi (<span class="str">mint</span>) in imena funkcij (<span class="fn">cian</span>) bi bili na papirju skoraj nevidni. Bodisi tiskaj iz brskalnika z vklopljenim »natisni barve ozadja«, bodisi najprej popravi <code>@media print</code>. To opozorilo se ne natisne.</div>
 
 <div class="grid">
 
@@ -264,6 +277,7 @@
     <span class="kw">return</span> d</pre>
     </div>
   </div>
+  <div class="warn">⚠️ <b>Stolpca si nasprotujeta.</b> Sredinski pravilno pravi <code>lst if lst is not None else []</code>, desni pa pri <code>Dvigalo</code> uporablja <code>post or []</code>. Nista enakovredna: <code>or</code> zamenja <i>vsako</i> lažno vrednost, torej tudi prazen seznam, ki ga klicatelj poda namenoma. Vedno piši <code>is not None</code>.</div>
   <div class="tip">⚡ KLJUČNE BESEDE v navodilu → razred: "definirajte razred", "konstruktor", "metoda", "atribut", "__str__", "__repr__"</div>
 </div>
 
@@ -538,6 +552,7 @@ inv = {v: k <span class="kw">for</span> k, v <span class="kw">in</span> slovar.<
 gnezdo = (znaki[<span class="num">0</span>],)
 <span class="kw">for</span> z <span class="kw">in</span> znaki[<span class="num">1</span>:]:
     gnezdo = (z, gnezdo)</pre>
+  <div class="warn">⚠️ Odsek »množica ključev« je le prikaz obeh zapisov, <b>ne veljavna koda</b> — <code>if</code> brez telesa je <code>IndentationError</code>. Na izpitu piši krajšo obliko <code>if key not in slovar:</code>; <code>.keys()</code> ni potreben in je počasnejši.</div>
 </div>
 
 <!-- ========== TIP 5: DREVESA / GRAFI ========== -->
@@ -706,6 +721,7 @@ x = (x + <span class="num">1</span>) % <span class="fn">len</span>(sez)
 <span class="cm"># GNEZDENA TABELA</span>
 mat = [[<span class="str">' '</span>]*s <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(v)]
 mat[i][j] = <span class="str">'#'</span>  <span class="cm"># pazi: ne mat[i] = [...]!</span></pre>
+  <div class="warn">⚠️ <code>zlij</code> zgoraj uporablja <code>a.pop(<span class="num">0</span>)</code>: ta je O(n) na klic, zato zlivanje pade na O(n²), poleg tega pa <b>izprazni vhodna seznama</b>. Z indeksoma je enako dolgo in brez obeh slabosti:<br><code>i = j = 0</code> → primerjaj <code>a[i]</code> in <code>b[j]</code> → vrni <code>r + a[i:] + b[j:]</code>.</div>
 </div>
 
 <!-- ========== QUICK REF ========== -->
